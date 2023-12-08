@@ -1,0 +1,16 @@
+---
+roles:
+  - name: geerlingguy.composer
+    version: 1.9.2
+  - name: geerlingguy.drupal
+    version: 4.3.0
+  - name: geerlingguy.drush
+    version: 4.0.0
+  - name: geerlingguy.php
+    version: 5.0.1
+  - name: geerlingguy.php-versions
+    version: 6.0.1
+  - name: geerlingguy.repo-epel
+    version: 3.1.1
+  - name: geerlingguy.repo-remi
+    version: 2.0.1

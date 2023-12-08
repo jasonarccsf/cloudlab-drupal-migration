@@ -1,0 +1,12 @@
+---
+all:
+  hosts:
+    drupal.ec2:
+      ansible_host: 54.165.135.136
+      ansible_user: ubuntu
+      ansible_port: 22
+
+  children:
+    drupal:
+      hosts:
+        drupal.ec2:
