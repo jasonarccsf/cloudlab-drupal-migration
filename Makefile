@@ -22,8 +22,8 @@ dp:
 dp-export:
 	ansible-playbook drupal/tasks/export.yml
 
-dp-upgrade:
-	ansible-playbook drupal/tasks/upgrade.yml
+dp-system-upgrade:
+	ansible-playbook drupal/tasks/system-upgrade.yml
 
 ## Development
 
