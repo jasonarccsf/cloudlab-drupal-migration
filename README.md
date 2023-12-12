@@ -1,6 +1,6 @@
 # Cloudlab - Drupal Migration
 
-An experiment to provision a Drupal ec2 instance, export a pantheon site, and import the site into the database.
+An experiment to provision a Drupal lightsail server (basically a simplified EC2 instance), export a pantheon site, and import the site into the database.
 
 ## Prerequisites
 
@@ -18,5 +18,5 @@ make apply
 ## Configure Drupal
 
 ```
-make apply
+make dp
 ```
