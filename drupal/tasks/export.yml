@@ -12,3 +12,8 @@
     - name: Verify terminus is installed.
       command: terminus --version
       changed_when: false
+
+    # https://docs.pantheon.io/terminus/commands/local-getLiveDB
+    - name: Export the database.
+      shell: |
+        terminus local:getLiveDB
