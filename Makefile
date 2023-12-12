@@ -16,11 +16,13 @@ reboot:
 
 ### Provisioning
 
-.PHONY: drupal
-drupal:
+dp:
 	ansible-playbook drupal/main.yml
 
-upgrade:
+dp-export:
+	ansible-playbook drupal/tasks/export.yml
+
+dp-upgrade:
 	ansible-playbook drupal/tasks/upgrade.yml
 
 ## Development

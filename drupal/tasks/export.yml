@@ -1,0 +1,14 @@
+---
+- name: Export.
+  hosts: drupal
+  gather_facts: false
+  become: true
+
+  tasks:
+    - name: Ping to validate the initial connection.
+      ansible.builtin.ping:
+        data: pong
+
+    - name: Verify terminus is installed.
+      command: terminus --version
+      changed_when: false
