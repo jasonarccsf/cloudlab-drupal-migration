@@ -2,7 +2,6 @@
 - name: Export.
   hosts: drupal
   gather_facts: false
-  become: true
 
   tasks:
     - name: Ping to validate the initial connection.
@@ -11,9 +10,11 @@
 
     - name: Verify terminus is installed.
       command: terminus --version
+      delegate_to: 127.0.0.1
       changed_when: false
 
     # https://docs.pantheon.io/terminus/commands/local-getLiveDB
-    - name: Export the database.
+    - name: Backup the database to $HOME/pantheon-local-copies/db.
       shell: |
-        terminus local:getLiveDB
+        terminus local:getLiveDB --overwrite -- foo
+      delegate_to: 127.0.0.1
