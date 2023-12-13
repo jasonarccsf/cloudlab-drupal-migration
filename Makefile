@@ -22,9 +22,12 @@ upgrade:
 dp:
 	ansible-playbook drupal/main.yml
 
-export: pt-export-site
-pt-export-site:
-	ansible-playbook drupal/tasks/pt-export-site.yml
+export: export-site
+export-site:
+	ansible-playbook drupal/tasks/export-site.yml
+
+site-list:
+	./scripts/gen-site-list.sh | tee site-list.json
 
 ## Development
 
