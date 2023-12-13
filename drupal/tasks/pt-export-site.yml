@@ -16,27 +16,17 @@
       delegate_to: 127.0.0.1
       changed_when: false
 
-    # https://docs.pantheon.io/terminus/commands/site-info
-    - name: Run "terminus site:info {{ site }} --format=json" command.
-      shell: terminus site:info {{ site }} --format=json
-      delegate_to: 127.0.0.1
-      changed_when: false
-      register: terminus_site_info
-
-    - name: Print "terminus site:info {{ site }} --format=json" command output.
-      debug: var=terminus_site_info.stdout
-
     # https://docs.pantheon.io/terminus/commands/local-getLiveDB
-    - name: Backup the database to $HOME/pantheon-local-copies/db/{{ site }}-db.tgz.
+    - name: Export the database to $HOME/pantheon-local-copies/db/{{ site }}-db.tgz.
       shell: terminus local:getLiveDB --no-interaction --overwrite -- {{ site }}
       delegate_to: 127.0.0.1
 
     # https://docs.pantheon.io/terminus/commands/local-getLiveFiles
-    - name: Backup the files to $HOME/pantheon-local-copies/files/{{ site }}-files.tgz.
+    - name: Export the files to $HOME/pantheon-local-copies/files/{{ site }}-files.tgz.
       shell: terminus local:getLiveFiles --no-interaction --overwrite -- {{ site }}
       delegate_to: 127.0.0.1
 
     # https://docs.pantheon.io/terminus/commands/local-clone
-    - name: Backup the site to $HOME/pantheon-local-copies/{{ site }}.
+    - name: Export the site to $HOME/pantheon-local-copies/{{ site }}.
       shell: terminus local:clone --no-interaction --override -- {{ site }}
       delegate_to: 127.0.0.1

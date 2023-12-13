@@ -14,16 +14,17 @@ ping:
 reboot:
 	ansible drupal --module-name ansible.builtin.reboot --args="reboot_timeout=300"
 
+upgrade:
+	ansible-playbook drupal/tasks/upgrade.yml
+
 ### Provisioning
 
 dp:
 	ansible-playbook drupal/main.yml
 
-dp-export:
-	ansible-playbook drupal/tasks/export.yml
-
-dp-system-upgrade:
-	ansible-playbook drupal/tasks/system-upgrade.yml
+export: pt-export-site
+pt-export-site:
+	ansible-playbook drupal/tasks/pt-export-site.yml
 
 ## Development
 

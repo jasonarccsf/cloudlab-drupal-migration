@@ -12,3 +12,5 @@ terraform.tfstate.backup
 .venv
 secrets.yaml
 secrets.yml
+
+*.json
