@@ -6,21 +6,7 @@
 # REF: https://docs.ansible.com/ansible/latest/reference_appendices/faq.html#running-on-macos-as-a-controller
 export OBJC_DISABLE_INITIALIZE_FORK_SAFETY := YES
 
-### Maintenance
-
-ping:
-	ansible drupal --module-name ansible.builtin.ping --args="data=pong"
-
-reboot:
-	ansible drupal --module-name ansible.builtin.reboot --args="reboot_timeout=300"
-
-### Preflight
-
-site-list:
-	./scripts/gen-site-list.sh | tee site-list.json
-
-export:
-	ansible-playbook drupal/export.yml
+### Dependencies
 
 deps:
 	ansible-galaxy install --role-file requirements.yml --force
@@ -29,6 +15,22 @@ deps:
 
 dp7:
 	ansible-playbook drupal/drupal7.yml
+
+### Maintenance
+
+ping:
+	ansible drupal --module-name ansible.builtin.ping --args="data=pong"
+
+reboot:
+	ansible drupal --module-name ansible.builtin.reboot --args="reboot_timeout=300"
+
+## Pantheon Scripts
+
+site-list:
+	./scripts/gen-site-list.sh | tee site-list.json
+
+export:
+	ansible-playbook drupal/export.yml
 
 ## Terraform Infrastructure
 

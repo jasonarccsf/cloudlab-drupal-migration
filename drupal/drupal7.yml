@@ -7,6 +7,10 @@
     - vars/drupal7.yml
 
   pre_tasks:
+    - name: Ping to validate the initial connection.
+      ansible.builtin.ping:
+        data: pong
+
     - name: Update apt cache.
       apt: update_cache=true cache_valid_time=600
       changed_when: false
@@ -44,9 +48,43 @@
     - vars/drupal7.yml
 
   pre_tasks:
+    - name: Ping to validate the initial connection.
+      ansible.builtin.ping:
+        data: pong
+
     - name: Update apt cache.
       apt: update_cache=true cache_valid_time=600
       changed_when: false
       when: ansible_os_family == 'Debian'
 
-    - import_tasks: tasks/download-unpack-drupal.yml
+  tasks:
+    - name: Ensure /var/www/html directory exists and has correct permissions.
+      shell: |
+        mkdir -p /var/www/html
+        chmod '0755' /var/www/html
+        chown -R root:root /var/www/html/drupal
+
+    - name: Download drupal-7.99 and unarchive to /tmp/drupal-7.99.
+      unarchive:
+        src: https://ftp.drupal.org/files/projects/drupal-7.99.tar.gz
+        dest: /tmp
+        remote_src: yes
+        creates: /tmp/drupal-7.99
+
+    - name: Ensure /var/www/html/drupal directory does not exist.
+      command: |
+        rm -rf /var/www/html/drupal
+
+    - name: Copy /tmp/drupal-7.99 to /var/www/html/drupal.
+      command: |
+        cp -r /tmp/drupal-7.99 /var/www/html/drupal
+
+    - name: Ensure /var/www/html/drupal directory has correct permissions.
+      shell: |
+        chmod '0755' /var/www/html/drupal
+        chown -R www-data:www-data /var/www/html/drupal
+
+    - name: Copy sites/default/default.settings.php to sites/default/settings.php.
+      shell: |
+        cp /var/www/html/drupal/sites/default/default.settings.php /var/www/html/drupal/sites/default/settings.php
+        chown www-data:www-data /var/www/html/drupal/sites/default/settings.php
