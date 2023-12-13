@@ -14,22 +14,22 @@ ping:
 reboot:
 	ansible drupal --module-name ansible.builtin.reboot --args="reboot_timeout=300"
 
-### Provisioning
+### Preflight
 
-dp7:
-	ansible-playbook drupal/drupal_7.yml
+site-list:
+	./scripts/gen-site-list.sh | tee site-list.json
 
 export: export-site
 export-site:
 	ansible-playbook drupal/tasks/export-site.yml
 
-site-list:
-	./scripts/gen-site-list.sh | tee site-list.json
-
-## Development
-
 deps:
 	ansible-galaxy install --role-file requirements.yml --force
+
+### Provisioning
+
+dp7:
+	ansible-playbook drupal/drupal_7.yml
 
 ## Terraform Infrastructure
 
