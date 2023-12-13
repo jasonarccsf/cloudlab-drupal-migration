@@ -1,5 +1,5 @@
 ---
-- name: Deploy drupal.
+- name: Setup Drupal.
   hosts: drupal
   become: true
 

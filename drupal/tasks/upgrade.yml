@@ -1,5 +1,5 @@
 ---
-- name: Run System Upgrade for Drupal Machine.
+- name: Run Apt Upgrade for Ubuntu Server.
   hosts: drupal
   gather_facts: false
   become: true
