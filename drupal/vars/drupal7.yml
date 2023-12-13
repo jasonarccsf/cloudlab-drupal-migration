@@ -26,6 +26,12 @@ apache_mods_enabled:
 apache_mods_disabled: []
 
 #
+# Drupal
+#
+
+drupal_version: "7.99"
+
+#
 # Mysql
 #
 mysql_databases:
