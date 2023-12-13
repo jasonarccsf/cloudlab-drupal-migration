@@ -13,21 +13,24 @@
       when: ansible_os_family == 'Debian'
 
   roles:
+    - role: geerlingguy.apache
+    - role: geerlingguy.mysql
     - role: geerlingguy.php-versions
     - role: geerlingguy.php
+    - role: geerlingguy.php-mysql
     - role: geerlingguy.composer
     - role: geerlingguy.drush
     - role: geerlingguy.drupal
 
   post_tasks:
-    - name: Confirm PHP is installed.
+    - name: Verify PHP is installed.
       command: php -v
       changed_when: false
 
-    - name: Confirm PHP version is correct.
+    - name: Verify PHP version is correct.
       shell: php -v | grep -F '{{ php_version }}'
       changed_when: false
 
-    - name: Confirm Composer is installed.
+    - name: Verify Composer is installed.
       command: composer --version
       changed_when: false

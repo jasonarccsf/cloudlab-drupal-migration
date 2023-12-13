@@ -1,12 +1,18 @@
 ---
 roles:
+  - name: geerlingguy.apache
+    version: 3.3.0
   - name: geerlingguy.composer
     version: 1.9.2
   - name: geerlingguy.drupal
     version: 4.3.0
   - name: geerlingguy.drush
     version: 4.0.0
+  - name: geerlingguy.mysql
+    version: 4.3.4
   - name: geerlingguy.php
     version: 5.0.1
+  - name: geerlingguy.php-mysql
+    version: 2.1.0
   - name: geerlingguy.php-versions
     version: 6.0.1

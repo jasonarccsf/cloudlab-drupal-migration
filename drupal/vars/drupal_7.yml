@@ -1,16 +1,18 @@
 ---
+# See: https://github.com/geerlingguy/drupal-vm/blob/master/docs/deployment/multisite.md
+# See: https://github.com/geerlingguy/ansible-role-drupal/blob/master/molecule/default/test-vars.yml
+
 #
 # PHP 8.0
 #
 php_version: "8.0"
-php_opcache_enable: "0"
 php_enable_webserver: false
+php_enable_php_fpm: true
+php_fpm_listen: "127.0.0.1:9000"
 
 #
 # Drupal 7
 #
-
-# See: https://github.com/geerlingguy/drupal-vm/blob/master/docs/deployment/multisite.md
 
 drupal_core_path: "/var/www/my-drupal-site"
 drupal_domain: "local.my-drupal-site.com"
@@ -20,12 +22,24 @@ drupal_domain: "local.my-drupal-site.com"
 # drupal_build_composer_project: false
 # drupal_install_site: true
 
+apache_mods_enabled:
+  - expires
+  - ssl
+  - rewrite
+  - proxy
+  - proxy_fcgi
+
+# apache_remove_default_vhost: true
+
 apache_vhosts:
   # Drupal VM's default domain, evaluating to whatever `vagrant_hostname` is set to (drupalvm.test by default).
   - servername: "drupal-7-sfdpa.site"
     serveralias: "www.{{ drupal_domain }}"
     documentroot: "{{ drupal_core_path }}"
-    extra_parameters: "{{ apache_vhost_php_fpm_parameters }}"
+    extra_parameters: |
+      <FilesMatch \.php$>
+        SetHandler "proxy:fcgi://{{ php_fpm_listen }}"
+      </FilesMatch>
 
   # - servername: "local.second-drupal-site.com"
   #   documentroot: "{{ drupal_core_path }}"
@@ -34,6 +48,8 @@ apache_vhosts:
   # - servername: "local.third-drupal-site.com"
   #   documentroot: "{{ drupal_core_path }}"
   #   extra_parameters: "{{ apache_vhost_php_fpm_parameters }}"
+
+mysql_python_package_debian: python3-mysqldb
 
 mysql_databases:
   - name: drupal
