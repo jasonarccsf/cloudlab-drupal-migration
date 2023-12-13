@@ -16,8 +16,8 @@ reboot:
 
 ### Provisioning
 
-dp:
-	ansible-playbook drupal/main.yml
+dp7:
+	ansible-playbook drupal/drupal_7.yml
 
 export: export-site
 export-site:
