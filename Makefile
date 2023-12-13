@@ -30,7 +30,7 @@ site-list:
 	./scripts/gen-site-list.sh | tee site-list.json
 
 export:
-	ansible-playbook drupal/export.yml
+	./scripts/pantheon-export-site.sh
 
 ## Terraform Infrastructure
 
