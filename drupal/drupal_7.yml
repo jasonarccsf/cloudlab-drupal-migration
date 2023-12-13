@@ -30,7 +30,3 @@
     - name: Verify PHP version is correct.
       shell: php -v | grep -F '{{ php_version }}'
       changed_when: false
-
-    - name: Verify Composer is installed.
-      command: composer --version
-      changed_when: false

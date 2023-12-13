@@ -8,6 +8,8 @@ roles:
     version: 4.3.0
   - name: geerlingguy.drush
     version: 4.0.0
+  - name: geerlingguy.git
+    version: 3.0.1
   - name: geerlingguy.mysql
     version: 4.3.4
   - name: geerlingguy.php
