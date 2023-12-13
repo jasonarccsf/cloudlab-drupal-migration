@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := ping
 
-## Drupal
+## Ansible Drupal Installation/Configuration
 
 # REF: https://github.com/ansible/ansible/issues/76322
 # REF: https://docs.ansible.com/ansible/latest/reference_appendices/faq.html#running-on-macos-as-a-controller
