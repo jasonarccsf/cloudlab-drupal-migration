@@ -1,5 +1,5 @@
 ## AWS
 
 module "aws" {
-  source = "./aws/accounts/sfgov-sandbox"
+  source = "./aws/accounts/sfgov-tis-sandbox"
 }
