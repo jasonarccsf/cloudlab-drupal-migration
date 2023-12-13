@@ -13,8 +13,6 @@ terraform {
 provider "aws" {
   default_tags {
     tags = {
-      ManagedBy  = "Terraform"
-      Owner      = "Jason Riddle"
       Repository = "https://github.com/jasonarccsf/cloudlab-drupal-migration"
     }
   }
