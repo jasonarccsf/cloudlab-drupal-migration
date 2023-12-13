@@ -12,12 +12,19 @@
       changed_when: false
       when: ansible_os_family == 'Debian'
 
+    # - name: Ensure directory {{ drupal_core_path }} exists.
+    #   file:
+    #     path: "{{ drupal_core_path }}"
+    #     state: directory
+    #     mode: '0755'
+
   roles:
     - role: geerlingguy.apache
     - role: geerlingguy.mysql
     - role: geerlingguy.php-versions
     - role: geerlingguy.php
     - role: geerlingguy.php-mysql
+    - role: geerlingguy.git
     - role: geerlingguy.composer
     - role: geerlingguy.drush
     - role: geerlingguy.drupal
