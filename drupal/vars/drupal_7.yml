@@ -9,6 +9,9 @@ php_enable_webserver: false
 #
 # Drupal 7
 #
+
+# See: https://github.com/geerlingguy/drupal-vm/blob/master/docs/deployment/multisite.md
+
 drupal_core_path: "/var/www/my-drupal-site"
 drupal_domain: "local.my-drupal-site.com"
 
