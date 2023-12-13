@@ -12,28 +12,36 @@
       changed_when: false
       when: ansible_os_family == 'Debian'
 
-    # - name: Ensure directory {{ drupal_core_path }} exists.
-    #   file:
-    #     path: "{{ drupal_core_path }}"
-    #     state: directory
-    #     mode: '0755'
+    - name: Ensure directory /var/www/html exists and has correct permissions.
+      file:
+        path: /var/www/html
+        owner: root
+        group: root
+        mode: '0755'
+        state: directory
+
+    - name: Download and unarchive drupal.
+      unarchive:
+        src: https://ftp.drupal.org/files/projects/drupal-7.99.tar.gz
+        dest: /tmp
+        owner: root
+        group: root
+        remote_src: yes
+        creates: /tmp/drupal-7.99
+
+    - name: Copy a "sudoers" file on the remote machine for editing.
+      copy:
+        src: /tmp/drupal-7.99
+        dest: /var/www/html/drupal
+        owner: www-data
+        group: www-data
+        mode: '0755'
+        remote_src: yes
 
   roles:
     - role: geerlingguy.apache
-    - role: geerlingguy.mysql
-    - role: geerlingguy.php-versions
-    - role: geerlingguy.php
-    - role: geerlingguy.php-mysql
-    - role: geerlingguy.git
-    - role: geerlingguy.composer
-    - role: geerlingguy.drush
-    - role: geerlingguy.drupal
 
   post_tasks:
-    - name: Verify PHP is installed.
-      command: php -v
-      changed_when: false
-
-    - name: Verify PHP version is correct.
-      shell: php -v | grep -F '{{ php_version }}'
+    - name: Verify Apache is installed.
+      command: apache2 -v
       changed_when: false

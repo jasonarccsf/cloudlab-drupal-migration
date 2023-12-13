@@ -9,6 +9,7 @@ terraform.tfstate.backup
 .devenv.flake.nix
 .env
 .esphome
+.vagrant
 .venv
 secrets.yaml
 secrets.yml

@@ -1,0 +1,39 @@
+---
+- name: Setup Drupal 7.
+  hosts: drupal7.ec2
+  become: true
+
+  vars_files:
+    - vars/drupal7.yml
+
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=true cache_valid_time=600
+      changed_when: false
+      when: ansible_os_family == 'Debian'
+
+    # - name: Ensure directory {{ drupal_core_path }} exists.
+    #   file:
+    #     path: "{{ drupal_core_path }}"
+    #     state: directory
+    #     mode: '0755'
+
+  roles:
+    - role: geerlingguy.apache
+    # - role: geerlingguy.mysql
+    # - role: geerlingguy.php-versions
+    # - role: geerlingguy.php
+    # - role: geerlingguy.php-mysql
+    # - role: geerlingguy.git
+    # - role: geerlingguy.composer
+    # - role: geerlingguy.drush
+    # - role: geerlingguy.drupal
+
+  post_tasks:
+    - name: Verify PHP is installed.
+      command: php -v
+      changed_when: false
+
+    - name: Verify PHP version is correct.
+      shell: php -v | grep -F '{{ php_version }}'
+      changed_when: false
