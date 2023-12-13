@@ -1,10 +1,10 @@
 ---
 - name: Setup Drupal 7.
-  hosts: drupal-7.ec2
+  hosts: drupal7.ec2
   become: true
 
   vars_files:
-    - vars/drupal_7.yml
+    - vars/drupal7.yml
 
   pre_tasks:
     - name: Update apt cache.

@@ -1,7 +1,7 @@
 ---
 all:
   hosts:
-    drupal-7.ec2:
+    drupal7.ec2:
       ansible_host: 100.26.47.175
       ansible_user: ubuntu
       ansible_port: 22
@@ -10,4 +10,4 @@ all:
   children:
     drupal:
       hosts:
-        drupal-7.ec2:
+        drupal7.ec2:

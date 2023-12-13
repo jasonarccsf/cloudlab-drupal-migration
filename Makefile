@@ -29,7 +29,7 @@ deps:
 ### Provisioning
 
 dp7:
-	ansible-playbook drupal/drupal_7.yml
+	ansible-playbook drupal/drupal7.yml
 
 ## Terraform Infrastructure
 
