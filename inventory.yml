@@ -1,12 +1,14 @@
 ---
 all:
   hosts:
-    drupal.ec2:
-      ansible_host: 54.165.135.136
+    drupal-7.ec2:
+      ansible_host: 54.173.180.148
       ansible_user: ubuntu
       ansible_port: 22
 
   children:
     drupal:
       hosts:
-        drupal.ec2:
+        drupal-7.ec2:
+      vars:
+        ansible_ssh_private_key_file: ~/.ssh/id_rsa.drupal
