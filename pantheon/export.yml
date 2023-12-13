@@ -6,11 +6,12 @@
   vars:
     site: dpa
 
-  tasks:
+  pre_tasks:
     - name: Ping to validate the initial connection.
       ansible.builtin.ping:
         data: pong
 
+  tasks:
     - name: Verify terminus is installed.
       command: terminus --version
       delegate_to: 127.0.0.1
