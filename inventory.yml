@@ -8,6 +8,6 @@ all:
       ansible_ssh_private_key_file: ~/.ssh/id_rsa.drupal
 
   children:
-    drupal:
+    drupal7:
       hosts:
         drupal7.ec2:

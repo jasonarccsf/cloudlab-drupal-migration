@@ -19,9 +19,8 @@ reboot:
 site-list:
 	./scripts/gen-site-list.sh | tee site-list.json
 
-export: export-site
-export-site:
-	ansible-playbook drupal/tasks/export-site.yml
+export:
+	ansible-playbook drupal/export.yml
 
 deps:
 	ansible-galaxy install --role-file requirements.yml --force
