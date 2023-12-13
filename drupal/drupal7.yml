@@ -1,5 +1,5 @@
 ---
-- name: Setup Drupal 7.
+- name: Setup Drupal 7 Dependencies.
   hosts: drupal7
   become: true
 
@@ -12,13 +12,11 @@
       changed_when: false
       when: ansible_os_family == 'Debian'
 
-    - import_tasks: tasks/download-unpack-drupal.yml
-
-  # roles:
-  #   - role: geerlingguy.apache
-  #   - role: geerlingguy.mysql
-  #   - role: geerlingguy.php-versions
-  #   - role: geerlingguy.php
+  roles:
+    - role: geerlingguy.apache
+    - role: geerlingguy.mysql
+    - role: geerlingguy.php-versions
+    - role: geerlingguy.php
 
   post_tasks:
     - name: Verify Apache is installed.
@@ -36,3 +34,19 @@
     - name: Verify PHP version is correct.
       shell: php -v | grep -F '{{ php_version }}'
       changed_when: false
+
+
+- name: Install Drupal 7.
+  hosts: drupal7
+  become: true
+
+  vars_files:
+    - vars/drupal7.yml
+
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=true cache_valid_time=600
+      changed_when: false
+      when: ansible_os_family == 'Debian'
+
+    - import_tasks: tasks/download-unpack-drupal.yml
