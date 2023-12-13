@@ -17,10 +17,10 @@ php_fpm_listen: "127.0.0.1:9000"
 drupal_core_path: "/var/www/my-drupal-site"
 drupal_domain: "local.my-drupal-site.com"
 
-# drupal_build_makefile: false
-# drupal_build_composer: false
-# drupal_build_composer_project: false
-# drupal_install_site: true
+drupal_build_makefile: false
+drupal_build_composer: false
+drupal_build_composer_project: false
+drupal_install_site: true
 
 apache_mods_enabled:
   - expires
