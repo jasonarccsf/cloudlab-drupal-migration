@@ -1,0 +1,41 @@
+---
+- name: Import Drupal 7 Database.
+  hosts: drupal7
+  become: true
+
+  vars_files:
+    - vars/drupal7.yml
+
+  pre_tasks:
+    - name: Ping to validate the initial connection.
+      ansible.builtin.ping:
+        data: pong
+
+    - name: Update apt cache.
+      ansible.builtin.apt: update_cache=true cache_valid_time=600
+      changed_when: false
+      when: ansible_os_family == 'Debian'
+
+  tasks:
+    # ?
+
+
+- name: Import Drupal 7 Files.
+  hosts: drupal7
+  become: true
+
+  vars_files:
+    - vars/drupal7.yml
+
+  pre_tasks:
+    - name: Ping to validate the initial connection.
+      ansible.builtin.ping:
+        data: pong
+
+    - name: Update apt cache.
+      ansible.builtin.apt: update_cache=true cache_valid_time=600
+      changed_when: false
+      when: ansible_os_family == 'Debian'
+
+  tasks:
+    # ?
