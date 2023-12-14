@@ -21,6 +21,10 @@ Install ansible role dependencies
 make deps
 ```
 
+## Setup
+
+Configure terminus.
+
 ## Provision EC2 Instance
 
 Generate AWS Credentials
