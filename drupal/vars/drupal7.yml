@@ -2,6 +2,16 @@
 # See: https://www.rosehosting.com/blog/how-to-install-drupal-on-ubuntu-22-04/
 
 #
+# DB
+#
+
+db_host: "127.0.0.1"
+db_port: "3306"
+db_name: "drupal"
+db_user: "drupal"
+db_pass: "drupal"
+
+#
 # Apache
 #
 apache_listen_ip: "*"
@@ -14,7 +24,7 @@ apache_remove_default_vhost: true
 apache_vhosts:
   - servername: "example.com"
     serveralias: "www.example.com"
-    documentroot: "/var/www/html/drupal/"
+    documentroot: "/var/www/drupal/"
     extra_parameters: |
 
       # ${APACHE_LOG_DIR} = /var/log/apache2
@@ -35,30 +45,41 @@ composer_path: /usr/local/bin/composer
 # Drupal
 #
 
-# drupal_version: "7.99"
+drupal_build_composer: false
+drupal_build_composer_project: false
 
-#
-# Drush
-#
+drupal_deploy: true
+drupal_deploy_repo: https://github.com/drupal/drupal.git
+drupal_deploy_version: "7.99"
+drupal_deploy_update: true
+drupal_deploy_dir: /var/www/drupal
+drupal_deploy_composer_install: false
 
-# Use Composer global install.
-# drush_launcher_install: false
-# drush_composer_global_install: true
-# drush_composer_update: false
+drupal_core_path: "{{ drupal_deploy_dir }}"
+drupal_core_owner: "{{ ansible_ssh_user | default(ansible_env.SUDO_USER, true) | default(ansible_env.USER, true) | default(ansible_user_id) }}"
+drupal_core_owner_become: false
+
+drupal_db_user: "{{ db_user }}"
+drupal_db_password: "{{ db_pass }}"
+drupal_db_name: "{{ db_name }}"
+drupal_db_backend: mysql
+drupal_db_host: "{{ db_host }}"
+
+drupal_install_site: false
 
 #
 # Mysql
 #
 mysql_databases:
-  - name: drupal
+  - name: "{{ db_name }}"
     encoding: utf8
     collation: utf8_general_ci
 
 mysql_users:
-  - name: drupal-two
-    host: "%"
-    password: drupal-two
-    priv: "drupal_two.*:ALL"
+  - name: "{{ db_user }}"
+    host: "{{ db_host }}"
+    password: "{{ db_pass }}"
+    priv: "{{ db_user }}.*:ALL"
 
 #
 # Php
@@ -88,9 +109,7 @@ php_fpm_enabled_on_boot: false
 # phpMyAdmin
 #
 
-phpmyadmin_mysql_host: localhost
-phpmyadmin_mysql_port: ""
-phpmyadmin_mysql_socket: ""
-phpmyadmin_mysql_connect_type: tcp
-phpmyadmin_mysql_user: root
-# phpmyadmin_mysql_password: "{{ mysql_root_password }}"
+phpmyadmin_mysql_host: "{{ db_host }}"
+phpmyadmin_mysql_port: "{{ db_port }}"
+phpmyadmin_mysql_user: "{{ db_user }}"
+phpmyadmin_mysql_password: "{{ db_pass }}"

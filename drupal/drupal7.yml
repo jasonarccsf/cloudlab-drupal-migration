@@ -23,12 +23,8 @@
     - role: geerlingguy.php
     - role: geerlingguy.php-mysql
     - role: geerlingguy.phpmyadmin
-    # TODO: Do not run Composer as root/super user! See https://getcomposer.org/root for details
     - role: geerlingguy.composer
-      become: false
-    # TODO: Do not run Composer as root/super user! See https://getcomposer.org/root for details
-    # - role: geerlingguy.drush
-    #   become: false
+    - role: geerlingguy.drush
 
   post_tasks:
     - name: Verify Apache is installed.
@@ -56,17 +52,6 @@
       retries: 60
       delay: 1
 
-    # TODO: Do not run Composer as root/super user! See https://getcomposer.org/root for details
-    - name: Verify Composer is installed.
-      become: false
-      command: composer --version
-      timeout: 5
-      changed_when: false
-
-    # - name: Verify Drush is installed.
-    #   command: drush --version
-    #   changed_when: false
-
 
 - name: Install Drupal 7.
   hosts: drupal7
@@ -85,34 +70,78 @@
       changed_when: false
       when: ansible_os_family == 'Debian'
 
-  tasks:
-    - name: Ensure /var/www/html directory exists and has correct permissions.
-      shell: |
-        mkdir -p /var/www/html
-        chmod '0755' /var/www/html
-        chown -R root:root /var/www/html/drupal
+  roles:
+    - role: geerlingguy.drupal
 
-    - name: Download drupal-7.99 and unarchive to /tmp/drupal-7.99.
-      unarchive:
-        src: https://ftp.drupal.org/files/projects/drupal-7.99.tar.gz
-        dest: /tmp
-        remote_src: yes
-        creates: /tmp/drupal-7.99
 
-    - name: Ensure /var/www/html/drupal directory does not exist.
-      command: |
-        rm -rf /var/www/html/drupal
+# - name: Install Drupal 7.
+#   hosts: drupal7
+#   become: true
 
-    - name: Copy /tmp/drupal-7.99 to /var/www/html/drupal.
-      command: |
-        cp -r /tmp/drupal-7.99 /var/www/html/drupal
+#   vars_files:
+#     - vars/drupal7.yml
 
-    - name: Ensure /var/www/html/drupal directory has correct permissions.
-      shell: |
-        chmod '0755' /var/www/html/drupal
-        chown -R www-data:www-data /var/www/html/drupal
+#   pre_tasks:
+#     - name: Ping to validate the initial connection.
+#       ansible.builtin.ping:
+#         data: pong
 
-    - name: Copy sites/default/default.settings.php to sites/default/settings.php.
-      shell: |
-        cp /var/www/html/drupal/sites/default/default.settings.php /var/www/html/drupal/sites/default/settings.php
-        chown www-data:www-data /var/www/html/drupal/sites/default/settings.php
+#     - name: Update apt cache.
+#       apt: update_cache=true cache_valid_time=600
+#       changed_when: false
+#       when: ansible_os_family == 'Debian'
+
+#   tasks:
+#     - name: Ensure /var/www/html directory exists and has correct permissions.
+#       shell: |
+#         mkdir -p /var/www/html
+#         chmod '0755' /var/www/html
+#         chown -R root:root /var/www/html/drupal
+
+#     - name: Download drupal-7.99 and unarchive to /tmp/drupal-7.99.
+#       unarchive:
+#         src: https://ftp.drupal.org/files/projects/drupal-7.99.tar.gz
+#         dest: /tmp
+#         remote_src: yes
+#         creates: /tmp/drupal-7.99
+
+#     - name: Ensure /var/www/html/drupal directory does not exist.
+#       command: |
+#         rm -rf /var/www/html/drupal
+
+#     - name: Copy /tmp/drupal-7.99 to /var/www/html/drupal.
+#       command: |
+#         cp -r /tmp/drupal-7.99 /var/www/html/drupal
+
+#     - name: Ensure /var/www/html/drupal directory has correct permissions.
+#       shell: |
+#         chmod '0755' /var/www/html/drupal
+#         chown -R www-data:www-data /var/www/html/drupal
+
+#     - name: Copy sites/default/default.settings.php to sites/default/settings.php.
+#       shell: |
+#         cp /var/www/html/drupal/sites/default/default.settings.php /var/www/html/drupal/sites/default/settings.php
+#         chown www-data:www-data /var/www/html/drupal/sites/default/settings.php
+
+#     - name: Copy templates/composer.json.j2 to /var/www/html/drupal/composer.json.
+#       template:
+#         src: templates/composer.json.j2
+#         dest: /var/www/html/drupal/composer.json
+#         owner: www-data
+#         group: www-data
+#         mode: '0644'
+
+#     - name: Run 'composer install' in /var/www/html/drupal.
+#       become: false
+#       command: composer install
+#       args:
+#         chdir: /var/www/html/drupal
+#         creates: /var/www/html/drupal/vendor/bin/drush
+#       timeout: 5
+
+#   post_tasks:
+#     - name: Verify Drush is installed.
+#       command: drush --version --root=/var/www/html/drupal
+#       args:
+#         chdir: /var/www/html/drupal
+#       changed_when: false
