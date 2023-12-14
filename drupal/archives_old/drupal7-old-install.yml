@@ -1,0 +1,71 @@
+# - name: Install Drupal 7.
+#   hosts: drupal7
+#   become: true
+
+#   vars_files:
+#     - vars/drupal7.yml
+
+#   pre_tasks:
+#     - name: Ping to validate the initial connection.
+#       ansible.builtin.ping:
+#         data: pong
+
+#     - name: Update apt cache.
+#       ansible.builtin.apt: update_cache=true cache_valid_time=600
+#       changed_when: false
+#       when: ansible_os_family == 'Debian'
+
+#   tasks:
+#     - name: Ensure /var/www/html directory exists and has correct permissions.
+#       ansible.builtin.shell: |
+#         mkdir -p /var/www/html
+#         chmod '0755' /var/www/html
+#         chown -R root:root /var/www/html/drupal
+
+#     - name: Download drupal-7.99 and unarchive to /tmp/drupal-7.99.
+#       ansible.builtin.unarchive:
+#         src: https://ftp.drupal.org/files/projects/drupal-7.99.tar.gz
+#         dest: /tmp
+#         remote_src: yes
+#         creates: /tmp/drupal-7.99
+
+#     - name: Ensure /var/www/html/drupal directory does not exist.
+#       ansible.builtin.command: |
+#         rm -rf /var/www/html/drupal
+
+#     - name: Copy /tmp/drupal-7.99 to /var/www/html/drupal.
+#       ansible.builtin.command: |
+#         cp -r /tmp/drupal-7.99 /var/www/html/drupal
+
+#     - name: Ensure /var/www/html/drupal directory has correct permissions.
+#       ansible.builtin.shell: |
+#         chmod '0755' /var/www/html/drupal
+#         chown -R www-data:www-data /var/www/html/drupal
+
+#     - name: Copy sites/default/default.settings.php to sites/default/settings.php.
+#       ansible.builtin.shell: |
+#         cp /var/www/html/drupal/sites/default/default.settings.php /var/www/html/drupal/sites/default/settings.php
+#         chown www-data:www-data /var/www/html/drupal/sites/default/settings.php
+
+#     - name: Copy templates/composer.json.j2 to /var/www/html/drupal/composer.json.
+#       ansible.builtin.template:
+#         src: templates/composer.json.j2
+#         dest: /var/www/html/drupal/composer.json
+#         owner: www-data
+#         group: www-data
+#         mode: '0644'
+
+#     - name: Run 'composer install' in /var/www/html/drupal.
+#       become: false
+#       ansible.builtin.command: composer install
+#       args:
+#         chdir: /var/www/html/drupal
+#         creates: /var/www/html/drupal/vendor/bin/drush
+#       timeout: 5
+
+#   post_tasks:
+#     - name: Verify Drush is installed.
+#       ansible.builtin.command: drush --version --root=/var/www/html/drupal
+#       args:
+#         chdir: /var/www/html/drupal
+#       changed_when: false
