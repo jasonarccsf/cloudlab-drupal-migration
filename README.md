@@ -31,7 +31,15 @@ make deps
 
 ## Setup
 
-Configure terminus.
+Configure terminus and confirm logged in.
+
+```sh
+# Inspect tokens
+ls -al ~/.terminus/cache/tokens/
+
+# Inspect cache
+cat ~/.terminus/cache/session
+```
 
 Configure terraform cloud.
 
