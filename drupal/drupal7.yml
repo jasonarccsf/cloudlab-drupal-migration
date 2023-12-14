@@ -21,13 +21,21 @@
     - role: geerlingguy.mysql
     - role: geerlingguy.php-versions
     - role: geerlingguy.php
+    - role: geerlingguy.php-mysql
+    - role: geerlingguy.phpmyadmin
+    # TODO: Do not run Composer as root/super user! See https://getcomposer.org/root for details
+    - role: geerlingguy.composer
+      become: false
+    # TODO: Do not run Composer as root/super user! See https://getcomposer.org/root for details
+    # - role: geerlingguy.drush
+    #   become: false
 
   post_tasks:
     - name: Verify Apache is installed.
       command: apache2 -v
       changed_when: false
 
-    - name: Verify Mysql is installed.
+    - name: Verify MySQL is installed.
       command: mysql --version
       changed_when: false
 
@@ -38,6 +46,26 @@
     - name: Verify PHP version is correct.
       shell: php -v | grep -F '{{ php_version }}'
       changed_when: false
+
+    - name: Ensure phpMyAdmin is running.
+      uri:
+        url: "http://127.0.0.1/phpmyadmin/"
+        status_code: 200
+      register: result
+      until: result.status == 200
+      retries: 60
+      delay: 1
+
+    # TODO: Do not run Composer as root/super user! See https://getcomposer.org/root for details
+    - name: Verify Composer is installed.
+      become: false
+      command: composer --version
+      timeout: 5
+      changed_when: false
+
+    # - name: Verify Drush is installed.
+    #   command: drush --version
+    #   changed_when: false
 
 
 - name: Install Drupal 7.

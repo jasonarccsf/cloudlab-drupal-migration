@@ -26,10 +26,25 @@ apache_mods_enabled:
 apache_mods_disabled: []
 
 #
+# Composer
+#
+
+composer_path: /usr/local/bin/composer
+
+#
 # Drupal
 #
 
-drupal_version: "7.99"
+# drupal_version: "7.99"
+
+#
+# Drush
+#
+
+# Use Composer global install.
+# drush_launcher_install: false
+# drush_composer_global_install: true
+# drush_composer_update: false
 
 #
 # Mysql
@@ -52,7 +67,30 @@ php_version: "8.1"
 php_install_recommends: false
 php_packages:
   - "php{{ php_version }}"
+  - "php{{ php_version }}-apcu"
   - "php{{ php_version }}-cli"
   - "php{{ php_version }}-common"
+  - "php{{ php_version }}-curl"
+  - "php{{ php_version }}-gd"
+  - "php{{ php_version }}-imap"
+  - "php{{ php_version }}-intl"
+  - "php{{ php_version }}-mbstring"
   - "php{{ php_version }}-mysql"
+  - "php{{ php_version }}-xml"
+  - "php{{ php_version }}-zip"
   - "libapache2-mod-php{{ php_version }}"
+  - "unzip"
+
+php_fpm_state: stopped
+php_fpm_enabled_on_boot: false
+
+#
+# phpMyAdmin
+#
+
+phpmyadmin_mysql_host: localhost
+phpmyadmin_mysql_port: ""
+phpmyadmin_mysql_socket: ""
+phpmyadmin_mysql_connect_type: tcp
+phpmyadmin_mysql_user: root
+# phpmyadmin_mysql_password: "{{ mysql_root_password }}"
