@@ -53,7 +53,7 @@
       delay: 1
 
 
-- name: Install Drupal 7.
+- name: Install Drupal 7 CMS.
   hosts: drupal7
   become: true
 
