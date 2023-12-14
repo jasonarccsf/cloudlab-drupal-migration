@@ -33,6 +33,12 @@ make deps
 
 Configure terminus.
 
+Configure terraform cloud.
+
+```sh
+make init
+```
+
 ## Provision EC2 Instance
 
 Generate AWS Credentials
