@@ -8,6 +8,12 @@
 # site: "dpa"
 
 #
+# Pantheon
+#
+
+# remote_site_pantheon_local_copies_dir: "/tmp/pantheon-local-copies"
+
+#
 # DB
 #
 
