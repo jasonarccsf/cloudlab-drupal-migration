@@ -16,8 +16,8 @@ deps:
 dp7:
 	ansible-playbook drupal/drupal7.yml
 
-dp7-import:
-	ansible-playbook drupal/drupal7-import.yml
+dp7-import-db:
+	ansible-playbook drupal/drupal7-import-db.yml
 
 ### Maintenance
 
