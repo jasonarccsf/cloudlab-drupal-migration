@@ -102,21 +102,24 @@
         creates: "{{ remote_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.sql"
 
 
-# - name: Import Drupal 7 SQL Database.
-#   hosts: drupal7
-#   gather_facts: false
+- name: Import Drupal 7 SQL Database.
+  hosts: drupal7
+  gather_facts: false
 
-#   vars_files:
-#     - vars/drupal7.yml
+  vars_files:
+    - vars/drupal7.yml
 
-#   vars:
-#     site_name: "dpa"
-#     remote_site_pantheon_local_copies_dir: "/tmp/pantheon-local-copies"
+  vars:
+    site_name: "dpa"
+    remote_site_pantheon_local_copies_dir: "/tmp/pantheon-local-copies"
 
-#   pre_tasks:
-#     - name: Ping to validate the initial connection.
-#       ansible.builtin.ping:
-#         data: pong
+  pre_tasks:
+    - name: Ping to validate the initial connection.
+      ansible.builtin.ping:
+        data: pong
 
-#   tasks:
-#     - ???
+  tasks:
+    - name: Import {{ remote_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.sql into database.
+      ansible.builtin.shell: |
+        mysql -u {{ db_user }} -p'{{ db_pass }}' -h {{ db_host }} -P {{ db_port }} \
+          {{ db_name }} < "{{ remote_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.sql"
