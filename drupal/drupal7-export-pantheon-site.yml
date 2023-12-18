@@ -1,0 +1,26 @@
+---
+- name: Copy Drupal 7 Database from Local Host to Remote Host.
+  hosts: drupal7
+  gather_facts: false
+
+  vars_files:
+    - vars/drupal7.yml
+
+  vars:
+    site: "dpa"
+
+  pre_tasks:
+    - name: Ping to validate the initial connection.
+      ansible.builtin.ping:
+        data: pong
+
+  tasks:
+    - name: Verify terminus is installed.
+      command: terminus --version
+      delegate_to: 127.0.0.1
+      changed_when: false
+
+    # See: https://docs.pantheon.io/terminus/commands/local-getLiveDB
+    - name: Export the database to $HOME/pantheon-local-copies/db/{{ site }}-db.tgz.
+      shell: "terminus local:getLiveDB --no-interaction --overwrite -- {{ site }}"
+      delegate_to: 127.0.0.1
