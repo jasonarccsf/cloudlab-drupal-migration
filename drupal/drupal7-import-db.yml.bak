@@ -30,6 +30,10 @@
       delegate_to: 127.0.0.1
 
   tasks:
+    # - name: Ensure {{ remote_site_pantheon_local_copies_dir }}/db directory exists (on remote host).
+    #   ansible.builtin.command: |
+    #     mkdir -p "{{ remote_site_pantheon_local_copies_dir }}/db"
+
     - name: Ensure {{ local_site_pantheon_local_copies_dir }} directory exists (on local host).
       ansible.builtin.stat:
         path: "{{ local_site_pantheon_local_copies_dir }}"
@@ -44,13 +48,13 @@
     - name: Ensure {{ local_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz file exists (on local host).
       ansible.builtin.stat:
         path: "{{ local_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz"
-      register: file_db_tgz
+      register: db_tgz
       delegate_to: 127.0.0.1
 
     - name: Fail if {{ local_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz file does not exist (on local host).
       ansible.builtin.fail:
         msg: File {{ local_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz file does not exist, run 'terminus local:getLiveDB --no-interaction --overwrite -- "{{ site_name }}"'
-      when: not file_db_tgz.stat.exists
+      when: not db_tgz.stat.exists
       delegate_to: 127.0.0.1
 
     - name: Copy {{ local_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz (on local host) to {{ remote_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz (on remote host).
@@ -76,14 +80,14 @@
         data: pong
 
   tasks:
-    - name: Ensure {{ remote_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz file exists (on remote host).
-      ansible.builtin.stat:
-        path: "{{ remote_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz"
-      register: dir_pantheon_local_copies_db
+    # - name: Ensure {{ remote_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz file exists (on remote host).
+    #   ansible.builtin.stat:
+    #     path: "{{ remote_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz"
+    #   register: dir_pantheon_local_copies_db
 
-    - name: Fail if {{ remote_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz file does not exist (on remote host).
-      ansible.builtin.fail:
-      when: not dir_pantheon_local_copies_db.stat.exists
+    # - name: Fail if {{ remote_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz file does not exist (on remote host).
+    #   ansible.builtin.fail:
+    #   when: not dir_pantheon_local_copies_db.stat.exists
 
     - name: Extract {{ remote_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz into {{ remote_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tar.
       ansible.builtin.command: |

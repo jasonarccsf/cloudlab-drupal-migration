@@ -24,6 +24,10 @@ i: d7-import-db
 d7-import-db:
 	ansible-playbook drupal/drupal7-import-db.yml
 
+i2: d7-import-files
+d7-import-files:
+	ansible-playbook drupal/drupal7-import-files.yml
+
 ### Maintenance
 
 ping:

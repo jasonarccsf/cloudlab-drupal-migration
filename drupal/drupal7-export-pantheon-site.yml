@@ -7,7 +7,7 @@
     - vars/drupal7.yml
 
   vars:
-    site: "dpa"
+    site_name: "dpa"
 
   pre_tasks:
     - name: Ping to validate the initial connection.
@@ -21,6 +21,11 @@
       changed_when: false
 
     # See: https://docs.pantheon.io/terminus/commands/local-getLiveDB
-    - name: Export the database to $HOME/pantheon-local-copies/db/{{ site }}-db.tgz.
-      shell: "terminus local:getLiveDB --no-interaction --overwrite -- {{ site }}"
+    - name: Export the database to $HOME/pantheon-local-copies/db/{{ site_name }}-db.tgz.
+      shell: "terminus local:getLiveDB --no-interaction --overwrite -- {{ site_name }}"
+      delegate_to: 127.0.0.1
+
+    # See: https://docs.pantheon.io/terminus/commands/local-getLiveFiles
+    - name: Export the files to $HOME/pantheon-local-copies/files/{{ site_name }}-files.tgz.
+      shell: terminus local:getLiveFiles --no-interaction --overwrite -- {{ site_name }}
       delegate_to: 127.0.0.1
