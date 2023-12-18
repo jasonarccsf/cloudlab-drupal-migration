@@ -13,14 +13,15 @@ deps:
 
 ### Provisioning
 
-dp7:
+d7:
 	ansible-playbook drupal/drupal7.yml
 
-export: dp7-export
-dp7-export:
+e: d7-export
+d7-export:
 	ansible-playbook drupal/drupal7-export-pantheon-site.yml
 
-dp7-import-db:
+i: d7-import-db
+d7-import-db:
 	ansible-playbook drupal/drupal7-import-db.yml
 
 ### Maintenance

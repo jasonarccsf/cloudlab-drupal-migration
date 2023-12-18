@@ -1,5 +1,5 @@
 ---
-- name: Copy Drupal 7 Database from Local Host to Remote Host.
+- name: Copy Drupal 7 SQL Database from Local Host (macOS Laptop) to Remote Host (EC2 Instance).
   hosts: drupal7
   gather_facts: false
 
@@ -7,7 +7,72 @@
     - vars/drupal7.yml
 
   vars:
-    site: "dpa"
+    site_name: "dpa"
+    remote_site_pantheon_local_copies_dir: "/tmp/pantheon-local-copies"
+
+  pre_tasks:
+    - name: Ping to validate the initial connection.
+      ansible.builtin.ping:
+        data: pong
+
+    - name: Set home var to "{{ lookup('env', 'HOME') }}".
+      ansible.builtin.set_fact:
+        home: "{{ lookup('env', 'HOME') }}"
+      delegate_to: 127.0.0.1
+
+    - name: Print home var.
+      debug: var=home
+      delegate_to: 127.0.0.1
+
+    - name: Set local_site_pantheon_local_copies_dir var to "{{ home }}/pantheon-local-copies".
+      ansible.builtin.set_fact:
+        local_site_pantheon_local_copies_dir: "{{ home }}/pantheon-local-copies"
+      delegate_to: 127.0.0.1
+
+  tasks:
+    - name: Ensure {{ remote_site_pantheon_local_copies_dir }}/db directory exists (on remote host).
+      ansible.builtin.command: |
+        mkdir -p "{{ remote_site_pantheon_local_copies_dir }}/db"
+
+    - name: Ensure {{ local_site_pantheon_local_copies_dir }} directory exists (on local host).
+      ansible.builtin.stat:
+        path: "{{ local_site_pantheon_local_copies_dir }}"
+      register: dir_pantheon_local_copies
+      delegate_to: 127.0.0.1
+
+    - name: Fail if {{ local_site_pantheon_local_copies_dir }} directory does not exist (on local host).
+      ansible.builtin.fail:
+      when: not dir_pantheon_local_copies.stat.exists
+      delegate_to: 127.0.0.1
+
+    - name: Ensure {{ local_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz file exists (on local host).
+      ansible.builtin.stat:
+        path: "{{ local_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz"
+      register: file_db_tgz
+      delegate_to: 127.0.0.1
+
+    - name: Fail if {{ local_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz file does not exist (on local host).
+      ansible.builtin.fail:
+        msg: File {{ local_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz file does not exist, run 'terminus local:getLiveDB --no-interaction --overwrite -- "{{ site_name }}"'
+      when: not file_db_tgz.stat.exists
+      delegate_to: 127.0.0.1
+
+    - name: Copy {{ local_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz (on local host) to {{ remote_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz (on remote host).
+      copy:
+        src: "{{ local_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz"
+        dest: "{{ remote_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz"
+
+
+- name: Unarchive Drupal 7 SQL Database.
+  hosts: drupal7
+  gather_facts: false
+
+  vars_files:
+    - vars/drupal7.yml
+
+  vars:
+    site_name: "dpa"
+    remote_site_pantheon_local_copies_dir: "/tmp/pantheon-local-copies"
 
   pre_tasks:
     - name: Ping to validate the initial connection.
@@ -15,50 +80,38 @@
         data: pong
 
   tasks:
-    - name: Set home var to {{ lookup('env','HOME') }}.
-      ansible.builtin.set_fact:
-        home: "{{ lookup('env','HOME') }}"
-      delegate_to: 127.0.0.1
-
-    - name: Print home var.
-      debug: var=home
-      delegate_to: 127.0.0.1
-
-    - name: Ensure {{ home }}/pantheon-local-copies (local directory) exists.
+    - name: Ensure {{ remote_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz file exists (on remote host).
       ansible.builtin.stat:
-        path: "{{ home }}/pantheon-local-copies"
-      register: dir_pantheon_local_copies
-      delegate_to: 127.0.0.1
+        path: "{{ remote_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz"
+      register: dir_pantheon_local_copies_db
 
-    - name: Fail if {{ home }}/pantheon-local-copies (local directory) does not exist.
+    - name: Fail if {{ remote_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz file does not exist (on remote host).
       ansible.builtin.fail:
-      when: not dir_pantheon_local_copies.stat.exists
-      delegate_to: 127.0.0.1
+      when: not dir_pantheon_local_copies_db.stat.exists
 
-    - name: Ensure {{ home }}/pantheon-local-copies/db/{{ site }}-db.tgz (local file) exists.
-      ansible.builtin.stat:
-        path: "{{ home }}/pantheon-local-copies/db/{{ site }}-db.tgz"
-      register: file_db_tgz
-      delegate_to: 127.0.0.1
+    - name: Extract {{ remote_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz into {{ remote_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tar.
+      ansible.builtin.command: |
+        gzip --decompress "{{ remote_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz" --force --keep
+      args:
+        creates: "{{ remote_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tar"
 
-    - name: Fail if {{ home }}/pantheon-local-copies/db/{{ site }}-db.tgz (local file) does not exist.
-      ansible.builtin.fail:
-        msg: File {{ home }}/pantheon-local-copies/db/{{ site }}-db.tgz doesn't exist, run 'terminus local:getLiveDB --no-interaction --overwrite -- "{{ site }}"'
-      when: not file_db_tgz.stat.exists
-      delegate_to: 127.0.0.1
-
-    - name: Copy {{ home }}/pantheon-local-copies/db/{{ site }}-db.tgz (local file) to /tmp/{{ site }}-db.tgz (remote location).
-      copy:
-        src: "{{ home }}/pantheon-local-copies/db/{{ site }}-db.tgz"
-        dest: "/tmp/{{ site }}-db.tgz"
+    - name: Rename {{ remote_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tar to {{ remote_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.sql.
+      ansible.builtin.command: |
+        mv "{{ remote_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tar" "{{ remote_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.sql"
+      args:
+        creates: "{{ remote_site_pantheon_local_copies_dir }}/db/{{ site_name }}-db.sql"
 
 
-# - name: Import Drupal 7 Database.
+# - name: Import Drupal 7 SQL Database.
 #   hosts: drupal7
-#   become: true
+#   gather_facts: false
 
 #   vars_files:
 #     - vars/drupal7.yml
+
+#   vars:
+#     site_name: "dpa"
+#     remote_site_pantheon_local_copies_dir: "/tmp/pantheon-local-copies"
 
 #   pre_tasks:
 #     - name: Ping to validate the initial connection.
@@ -66,4 +119,4 @@
 #         data: pong
 
 #   tasks:
-#     # ?
+#     - ???
