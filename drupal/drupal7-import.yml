@@ -1,7 +1,6 @@
 ---
-- name: Import Drupal 7 Database.
+- name: Copy Drupal 7 Database from Local Host to Remote Host.
   hosts: drupal7
-  become: true
 
   vars_files:
     - vars/drupal7.yml
@@ -11,31 +10,56 @@
       ansible.builtin.ping:
         data: pong
 
-    - name: Update apt cache.
-      ansible.builtin.apt: update_cache=true cache_valid_time=600
-      changed_when: false
-      when: ansible_os_family == 'Debian'
-
   tasks:
-    # ?
+    - name: Set home var to {{ lookup('env','HOME') }}.
+      ansible.builtin.set_fact:
+        home: "{{ lookup('env','HOME') }}"
+      delegate_to: 127.0.0.1
+
+    - name: Print home var.
+      debug: var=home
+      delegate_to: 127.0.0.1
+
+    - name: Ensure {{ home }}/pantheon-local-copies (local directory) exists.
+      ansible.builtin.stat:
+        path: "{{ home }}/pantheon-local-copies"
+      register: dir_pantheon_local_copies
+      delegate_to: 127.0.0.1
+
+    - name: Fail if {{ home }}/pantheon-local-copies (local directory) does not exist.
+      ansible.builtin.fail:
+      when: not dir_pantheon_local_copies.stat.exists
+      delegate_to: 127.0.0.1
+
+    - name: Ensure {{ home }}/pantheon-local-copies/db/dpa-db.tgz (local file) exists.
+      ansible.builtin.stat:
+        path: "{{ home }}/pantheon-local-copies/db/dpa-db.tgz"
+      register: file_db_tgz
+      delegate_to: 127.0.0.1
+
+    - name: Fail if {{ home }}/pantheon-local-copies/db/dpa-db.tgz (local file) does not exist.
+      ansible.builtin.fail:
+        msg: File {{ home }}/pantheon-local-copies/db/dpa-db.tgz doesn't exist, run 'terminus local:getLiveDB --no-interaction --overwrite -- "dpa"'
+      when: not file_db_tgz.stat.exists
+      delegate_to: 127.0.0.1
+
+    - name: Copy {{ home }}/pantheon-local-copies/db/dpa-db.tgz (local file) to /tmp/dpa-db.tgz (remote location).
+      copy:
+        src: "{{ home }}/pantheon-local-copies/db/dpa-db.tgz"
+        dest: /tmp/dpa-db.tgz
 
 
-- name: Import Drupal 7 Files.
-  hosts: drupal7
-  become: true
+# - name: Import Drupal 7 Database.
+#   hosts: drupal7
+#   become: true
 
-  vars_files:
-    - vars/drupal7.yml
+#   vars_files:
+#     - vars/drupal7.yml
 
-  pre_tasks:
-    - name: Ping to validate the initial connection.
-      ansible.builtin.ping:
-        data: pong
+#   pre_tasks:
+#     - name: Ping to validate the initial connection.
+#       ansible.builtin.ping:
+#         data: pong
 
-    - name: Update apt cache.
-      ansible.builtin.apt: update_cache=true cache_valid_time=600
-      changed_when: false
-      when: ansible_os_family == 'Debian'
-
-  tasks:
-    # ?
+#   tasks:
+#     # ?
