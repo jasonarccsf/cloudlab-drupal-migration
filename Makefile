@@ -16,6 +16,10 @@ deps:
 dp7:
 	ansible-playbook drupal/drupal7.yml
 
+export: dp7-export
+dp7-export:
+	ansible-playbook drupal/drupal7-export-pantheon-site.yml
+
 dp7-import-db:
 	ansible-playbook drupal/drupal7-import-db.yml
 
@@ -32,8 +36,8 @@ reboot:
 site-list:
 	./scripts/gen-site-list.sh | tee site-list.json
 
-export:
-	./scripts/pantheon-export-site.sh
+# export:
+# 	./scripts/pantheon-export-site.sh
 
 ## Terraform Infrastructure
 

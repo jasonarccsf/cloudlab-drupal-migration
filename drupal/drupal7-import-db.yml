@@ -1,6 +1,7 @@
 ---
 - name: Copy Drupal 7 Database from Local Host to Remote Host.
   hosts: drupal7
+  gather_facts: false
 
   vars_files:
     - vars/drupal7.yml
