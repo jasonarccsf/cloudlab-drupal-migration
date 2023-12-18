@@ -30,10 +30,6 @@
       delegate_to: 127.0.0.1
 
   tasks:
-    - name: Ensure {{ remote_site_pantheon_local_copies_dir }}/db directory exists (on remote host).
-      ansible.builtin.command: |
-        mkdir -p "{{ remote_site_pantheon_local_copies_dir }}/db"
-
     - name: Ensure {{ local_site_pantheon_local_copies_dir }} directory exists (on local host).
       ansible.builtin.stat:
         path: "{{ local_site_pantheon_local_copies_dir }}"
