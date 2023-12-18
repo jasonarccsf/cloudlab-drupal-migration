@@ -5,6 +5,9 @@
   vars_files:
     - vars/drupal7.yml
 
+  vars:
+    site: "dpa"
+
   pre_tasks:
     - name: Ping to validate the initial connection.
       ansible.builtin.ping:
@@ -31,22 +34,22 @@
       when: not dir_pantheon_local_copies.stat.exists
       delegate_to: 127.0.0.1
 
-    - name: Ensure {{ home }}/pantheon-local-copies/db/dpa-db.tgz (local file) exists.
+    - name: Ensure {{ home }}/pantheon-local-copies/db/{{ site }}-db.tgz (local file) exists.
       ansible.builtin.stat:
-        path: "{{ home }}/pantheon-local-copies/db/dpa-db.tgz"
+        path: "{{ home }}/pantheon-local-copies/db/{{ site }}-db.tgz"
       register: file_db_tgz
       delegate_to: 127.0.0.1
 
-    - name: Fail if {{ home }}/pantheon-local-copies/db/dpa-db.tgz (local file) does not exist.
+    - name: Fail if {{ home }}/pantheon-local-copies/db/{{ site }}-db.tgz (local file) does not exist.
       ansible.builtin.fail:
-        msg: File {{ home }}/pantheon-local-copies/db/dpa-db.tgz doesn't exist, run 'terminus local:getLiveDB --no-interaction --overwrite -- "dpa"'
+        msg: File {{ home }}/pantheon-local-copies/db/{{ site }}-db.tgz doesn't exist, run 'terminus local:getLiveDB --no-interaction --overwrite -- "{{ site }}"'
       when: not file_db_tgz.stat.exists
       delegate_to: 127.0.0.1
 
-    - name: Copy {{ home }}/pantheon-local-copies/db/dpa-db.tgz (local file) to /tmp/dpa-db.tgz (remote location).
+    - name: Copy {{ home }}/pantheon-local-copies/db/{{ site }}-db.tgz (local file) to /tmp/{{ site }}-db.tgz (remote location).
       copy:
-        src: "{{ home }}/pantheon-local-copies/db/dpa-db.tgz"
-        dest: /tmp/dpa-db.tgz
+        src: "{{ home }}/pantheon-local-copies/db/{{ site }}-db.tgz"
+        dest: "/tmp/{{ site }}-db.tgz"
 
 
 # - name: Import Drupal 7 Database.
