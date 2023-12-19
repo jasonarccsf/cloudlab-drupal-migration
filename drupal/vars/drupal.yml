@@ -20,6 +20,7 @@ db_pass: "drupal"
 #
 # Apache
 #
+
 apache_listen_ip: "*"
 apache_listen_port: 80
 apache_listen_port_ssl: 443
@@ -76,6 +77,7 @@ drupal_install_site: false
 #
 # Mysql
 #
+
 mysql_databases:
   - name: "{{ db_name }}"
     encoding: utf8
@@ -90,6 +92,7 @@ mysql_users:
 #
 # Php
 #
+
 php_version: "8.1"
 php_install_recommends: false
 php_packages:
