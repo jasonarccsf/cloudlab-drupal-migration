@@ -13,24 +13,20 @@ deps:
 
 ### Provisioning
 
-d7:
-	ansible-playbook drupal/drupal7.yml
+.PHONY: drupal
+drupal:
+	ansible-playbook drupal/drupal.yml
 
-e: d7-export
-d7-export:
-	ansible-playbook drupal/drupal7-export-pantheon-site.yml
+export:
+	ansible-playbook drupal/drupal-export-pantheon-site.yml
 
-i: d7-import-db
-d7-import-db:
-	ansible-playbook drupal/drupal7-import-db.yml
+i1: import-db
+import-db:
+	ansible-playbook drupal/drupal-import-db.yml
 
-i2: d7-import-files
-d7-import-files:
-	ansible-playbook drupal/drupal7-import-files.yml
-
-i3: d7-import-site
-d7-import-site:
-	ansible-playbook drupal/drupal7-import-site.yml
+i2: import-files
+import-files:
+	ansible-playbook drupal/drupal-import-files.yml
 
 ### Maintenance
 

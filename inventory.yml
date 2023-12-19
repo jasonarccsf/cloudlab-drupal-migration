@@ -1,33 +1,17 @@
 ---
 all:
   hosts:
-    drupal7-dpa.ec2:
+    dpa-7.99.ec2:
       # Ansible
-      ansible_host: '34.207.150.182'
+      ansible_host: '3.93.77.180'
       ansible_user: ubuntu
       ansible_port: 22
       ansible_ssh_private_key_file: ~/.ssh/id_rsa.drupal
 
-    # TODO: This will just be a repeated template to copy from.
-    # drupal7-foobar.ec2:
-    #   # Ansible
-    #   ansible_host: ''
-    #   ansible_user: ubuntu
-    #   ansible_port: 22
-    #   ansible_ssh_private_key_file: ~/.ssh/id_rsa.drupal
-
   children:
-    drupal7:
+    drupal:
       hosts:
-        drupal7-dpa.ec2:
+        dpa-7.99.ec2:
           # Site
           site_name: "dpa"
           site_drupal_version: "7.99"
-          site_drupal_major_version_only: "7"
-
-        # TODO: This will just be a repeated template to copy from.
-        # drupal7-foobar.ec2:
-        #   # Site
-        #   site_name: "foobar"
-        #   site_drupal_version: "7.99"
-        #   site_drupal_major_version_only: "7"

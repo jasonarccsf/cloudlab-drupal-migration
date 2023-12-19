@@ -1,10 +1,10 @@
 ---
-- name: Setup Drupal 7 Dependencies.
-  hosts: drupal7
+- name: Setup Drupal Dependencies.
+  hosts: drupal
   become: true
 
   vars_files:
-    - vars/drupal7.yml
+    - vars/drupal.yml
 
   pre_tasks:
     - name: Ping to validate the initial connection.
@@ -53,12 +53,12 @@
       delay: 1
 
 
-- name: Install Drupal 7 CMS.
-  hosts: drupal7
+- name: Install Drupal CMS.
+  hosts: drupal
   become: true
 
   vars_files:
-    - vars/drupal7.yml
+    - vars/drupal.yml
 
   pre_tasks:
     - name: Ping to validate the initial connection.

@@ -1,14 +1,10 @@
 ---
-- name: Copy Drupal 7 SQL Database from Local Host (macOS Laptop) to Remote Host (EC2 Instance).
-  hosts: drupal7
+- name: Copy Drupal SQL Database from Local Host (macOS Laptop) to Remote Host (EC2 Instance).
+  hosts: drupal
   gather_facts: false
 
   vars_files:
-    - vars/drupal7.yml
-
-  vars:
-    site_name: "dpa"
-    site_remote_pantheon_local_copies_dir: "/tmp/pantheon-local-copies"
+    - vars/drupal.yml
 
   pre_tasks:
     - name: Ping to validate the initial connection.
@@ -48,16 +44,12 @@
         dest: "{{ site_remote_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz"
 
 
-- name: Unarchive Drupal 7 SQL Database.
-  hosts: drupal7
+- name: Unarchive Drupal SQL Database.
+  hosts: drupal
   gather_facts: false
 
   vars_files:
-    - vars/drupal7.yml
-
-  vars:
-    site_name: "dpa"
-    site_remote_pantheon_local_copies_dir: "/tmp/pantheon-local-copies"
+    - vars/drupal.yml
 
   pre_tasks:
     - name: Ping to validate the initial connection.
@@ -78,16 +70,12 @@
         creates: "{{ site_remote_pantheon_local_copies_dir }}/db/{{ site_name }}-db.sql"
 
 
-- name: Import Drupal 7 SQL Database.
-  hosts: drupal7
+- name: Import Drupal SQL Database.
+  hosts: drupal
   gather_facts: false
 
   vars_files:
-    - vars/drupal7.yml
-
-  vars:
-    site_name: "dpa"
-    site_remote_pantheon_local_copies_dir: "/tmp/pantheon-local-copies"
+    - vars/drupal.yml
 
   pre_tasks:
     - name: Ping to validate the initial connection.

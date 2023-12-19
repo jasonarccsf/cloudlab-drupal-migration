@@ -1,14 +1,10 @@
 ---
-- name: Copy Drupal 7 Files from Local Host (macOS Laptop) to Remote Host (EC2 Instance).
-  hosts: drupal7
+- name: Copy Drupal Files from Local Host (macOS Laptop) to Remote Host (EC2 Instance).
+  hosts: drupal
   gather_facts: false
 
   vars_files:
-    - vars/drupal7.yml
-
-  vars:
-    site_name: "dpa"
-    site_remote_pantheon_local_copies_dir: "/tmp/pantheon-local-copies"
+    - vars/drupal.yml
 
   pre_tasks:
     - name: Ping to validate the initial connection.
@@ -48,16 +44,12 @@
         dest: "{{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tgz"
 
 
-- name: Unarchive Drupal 7 Files.
-  hosts: drupal7
+- name: Unarchive Drupal Files.
+  hosts: drupal
   gather_facts: false
 
   vars_files:
-    - vars/drupal7.yml
-
-  vars:
-    site_name: "dpa"
-    site_remote_pantheon_local_copies_dir: "/tmp/pantheon-local-copies"
+    - vars/drupal.yml
 
   pre_tasks:
     - name: Ping to validate the initial connection.
@@ -80,26 +72,3 @@
         tar -xvf "{{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tar" -C "{{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files"
       args:
         creates: "{{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files/files_live"
-
-
-# - name: Import Drupal 7 Files.
-#   hosts: drupal7
-#   gather_facts: false
-
-#   vars_files:
-#     - vars/drupal7.yml
-
-#   vars:
-#     site_name: "dpa"
-#     site_remote_pantheon_local_copies_dir: "/tmp/pantheon-local-copies"
-
-#   pre_tasks:
-#     - name: Ping to validate the initial connection.
-#       ansible.builtin.ping:
-#         data: pong
-
-#   tasks:
-#     - name: Import {{ site_remote_pantheon_local_copies_dir }}/db/{{ site_name }}-db.sql into database.
-#       ansible.builtin.shell: |
-#         mysql -u {{ db_user }} -p'{{ db_pass }}' -h {{ db_host }} -P {{ db_port }} \
-#           {{ db_name }} < "{{ site_remote_pantheon_local_copies_dir }}/db/{{ site_name }}-db.sql"

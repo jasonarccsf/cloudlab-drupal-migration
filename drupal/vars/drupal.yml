@@ -5,13 +5,7 @@
 # Site
 #
 
-# site: "dpa"
-
-#
-# Pantheon
-#
-
-# remote_site_pantheon_local_copies_dir: "/tmp/pantheon-local-copies"
+site_remote_pantheon_local_copies_dir: "/tmp/pantheon-local-copies"
 
 #
 # DB
@@ -36,7 +30,7 @@ apache_remove_default_vhost: true
 apache_vhosts:
   - servername: "example.com"
     serveralias: "www.example.com"
-    documentroot: "/var/www/drupal/{{ site_drupal_major_version_only }}/"
+    documentroot: "/var/www/drupal/{{ site_drupal_version }}/"
     extra_parameters: |
 
       # ${APACHE_LOG_DIR} = /var/log/apache2
@@ -64,7 +58,7 @@ drupal_deploy: true
 drupal_deploy_repo: https://github.com/drupal/drupal.git
 drupal_deploy_version: "{{ site_drupal_version }}"
 drupal_deploy_update: true
-drupal_deploy_dir: "/var/www/drupal/{{ site_drupal_major_version_only }}"
+drupal_deploy_dir: "/var/www/drupal/{{ site_drupal_version }}"
 drupal_deploy_composer_install: false
 
 drupal_core_path: "{{ drupal_deploy_dir }}"

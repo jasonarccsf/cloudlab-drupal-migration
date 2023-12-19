@@ -1,14 +1,10 @@
 ---
-- name: Copy Drupal 7 Database from Local Host to Remote Host.
-  hosts: drupal7
+- name: Copy Drupal Database from Local Host to Remote Host.
+  hosts: drupal
   gather_facts: false
 
   vars_files:
-    - vars/drupal7.yml
-
-  vars:
-    site_name: "dpa"
-    # site_name: "sfdbi"
+    - vars/drupal.yml
 
   pre_tasks:
     - name: Ping to validate the initial connection.
@@ -30,8 +26,3 @@
     - name: Export the files to $HOME/pantheon-local-copies/files/{{ site_name }}-files.tgz.
       shell: "terminus local:getLiveFiles --no-interaction --overwrite -- {{ site_name }}"
       delegate_to: 127.0.0.1
-
-    # See: https://docs.pantheon.io/terminus/commands/local-clone
-    # - name: Export the site to $HOME/pantheon-local-copies/{{ site_name }}.
-    #   shell: "terminus local:clone --no-interaction --override -- {{ site_name }}"
-    #   delegate_to: 127.0.0.1
