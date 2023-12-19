@@ -9,7 +9,9 @@ resource "aws_lightsail_instance" "dpa_7_99" {
   key_pair_name = "id_rsa.drupal"
 
   tags = {
-    Name = "DPA-7.99"
+    Name                = "DPA-7.99"
+    Site_Name           = "DPA"
+    Site_Drupal_Version = "7.99"
   }
 }
 
