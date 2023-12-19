@@ -28,6 +28,10 @@ i2: import-files
 import-files:
 	ansible-playbook drupal/drupal-import-files.yml
 
+i3: import-source
+import-source:
+	ansible-playbook drupal/drupal-import-source.yml
+
 ### Maintenance
 
 ping:

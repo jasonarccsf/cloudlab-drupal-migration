@@ -34,9 +34,13 @@
 
     - name: Fail if {{ home_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz file does not exist (on local host).
       ansible.builtin.fail:
-        msg: File {{ home_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz file does not exist, run 'terminus local:getLiveDB --no-interaction --overwrite -- "{{ site_name }}"'
+        msg: File {{ home_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz file does not exist, run 'make export'
       when: not db_tgz.stat.exists
       delegate_to: 127.0.0.1
+
+    - name: Ensure {{ site_remote_pantheon_local_copies_dir }}/db directory exists.
+      shell: |
+        mkdir -p {{ site_remote_pantheon_local_copies_dir }}/db
 
     - name: Copy {{ home_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz (on local host) to {{ site_remote_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz (on remote host).
       copy:
@@ -83,6 +87,11 @@
         data: pong
 
   tasks:
+    - name: Drop {{ db_name }} database if it exists.
+      shell: |
+       mysql -u {{ db_user }} -p'{{ db_pass }}' -h {{ db_host }} -P {{ db_port }} \
+        -e "DROP DATABASE IF EXISTS {{ db_name }};"
+
     - name: Import {{ site_remote_pantheon_local_copies_dir }}/db/{{ site_name }}-db.sql into database.
       ansible.builtin.shell: |
         mysql -u {{ db_user }} -p'{{ db_pass }}' -h {{ db_host }} -P {{ db_port }} \

@@ -87,7 +87,7 @@ mysql_databases:
 
 mysql_users:
   - name: "{{ db_user }}"
-    host: "{{ db_host }}"
+    host: "%"
     password: "{{ db_pass }}"
     priv: "{{ db_user }}.*:ALL"
 

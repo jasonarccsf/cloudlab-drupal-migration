@@ -34,9 +34,13 @@
 
     - name: Fail if {{ home_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tgz file does not exist (on local host).
       ansible.builtin.fail:
-        msg: File {{ home_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tgz file does not exist, run 'terminus local:getLiveFiles --no-interaction --overwrite -- "{{ site_name }}"'
+        msg: File {{ home_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tgz file does not exist, run 'make export'
       when: not files_tgz.stat.exists
       delegate_to: 127.0.0.1
+
+    - name: Ensure {{ site_remote_pantheon_local_copies_dir }}/files directory exists.
+      shell: |
+        mkdir -p {{ site_remote_pantheon_local_copies_dir }}/files
 
     - name: Copy {{ home_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tgz (on local host) to {{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tgz (on remote host).
       copy:
@@ -57,15 +61,15 @@
         data: pong
 
   tasks:
-    - name: Ensure {{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files directory exists (on local host).
-      ansible.builtin.command: |
-        mkdir -p {{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files
-
     - name: Extract {{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tgz into {{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tar.
       ansible.builtin.command: |
         gzip --decompress "{{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tgz" --force --keep
       args:
         creates: "{{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tar"
+
+    - name: Ensure {{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files directory exists (on remote host).
+      ansible.builtin.command: |
+        mkdir -p {{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files
 
     - name: Extract {{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tar to {{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files.
       ansible.builtin.command: |

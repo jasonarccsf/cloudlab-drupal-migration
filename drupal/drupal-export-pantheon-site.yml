@@ -39,9 +39,14 @@
     - name: Export the site to {{ home_pantheon_local_copies_dir }}/{{ site_name }}.
       shell: "terminus local:clone --no-interaction --override -- {{ site_name }}"
 
-    - name: Create a tar.gz archive of the site source.
+    - name: Create a tar.gz archive of the site source and save to {{ home_pantheon_local_copies_dir }}/source/{{ site_name }}-source.tar.gz.
       shell: |
-        cd {{ home_pantheon_local_copies_dir }} &&
-          tar -cvzf {{ site_name }}.tar.gz {{ site_name }}/*
+        mkdir -p {{ home_pantheon_local_copies_dir }}/source
+
+        pushd {{ home_pantheon_local_copies_dir }} &&
+          tar -cvzf {{ site_name }}-source.tar.gz {{ site_name }}/* &&
+          popd
+
+        mv {{ home_pantheon_local_copies_dir }}/{{ site_name }}-source.tar.gz {{ home_pantheon_local_copies_dir }}/source/{{ site_name }}-source.tar.gz
       args:
-        creates: "{{ home_pantheon_local_copies_dir }}/dpa.tar.gz"
+        creates: "{{ home_pantheon_local_copies_dir }}/source/{{ site_name }}-source.tar.gz"
