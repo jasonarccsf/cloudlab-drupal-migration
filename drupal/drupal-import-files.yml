@@ -76,3 +76,32 @@
         tar -xvf "{{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tar" -C "{{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files"
       args:
         creates: "{{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files/files_live"
+
+
+- name: Import Drupal Files.
+  hosts: drupal
+  become: true
+  gather_facts: false
+
+  vars_files:
+    - vars/drupal.yml
+
+  pre_tasks:
+    - name: Ping to validate the initial connection.
+      ansible.builtin.ping:
+        data: pong
+
+  tasks:
+    - name: Remove {{ site_install_files }}.
+      ansible.builtin.shell: |
+        rm -rf {{ site_install_files }}
+
+    - name: Import {{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files/files_live into {{ site_install_files }}.
+      ansible.builtin.shell: |
+        cp -r {{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files/files_live {{ site_install_files }}
+
+    - name: Ensure {{ site_install_files }} directory has correct permissions.
+      become: true
+      ansible.builtin.shell: |
+        chmod '0755' {{ site_install_files }}
+        chown -R www-data:www-data {{ site_install_files }}

@@ -1,78 +1,54 @@
 ---
-# - name: Copy Drupal Source from Local Host (macOS Laptop) to Remote Host (EC2 Instance).
-#   hosts: drupal
-#   gather_facts: false
+- name: Copy Drupal Source from Local Host (macOS Laptop) to Remote Host (EC2 Instance).
+  hosts: drupal
+  gather_facts: false
 
-#   vars_files:
-#     - vars/drupal.yml
+  vars_files:
+    - vars/drupal.yml
 
-#   pre_tasks:
-#     - name: Ping to validate the initial connection.
-#       ansible.builtin.ping:
-#         data: pong
+  pre_tasks:
+    - name: Ping to validate the initial connection.
+      ansible.builtin.ping:
+        data: pong
 
-#     - name: Set home var to "{{ lookup('env', 'HOME') }}".
-#       ansible.builtin.set_fact:
-#         home: "{{ lookup('env', 'HOME') }}"
-#       delegate_to: 127.0.0.1
+    - name: Set home var to "{{ lookup('env', 'HOME') }}".
+      ansible.builtin.set_fact:
+        home: "{{ lookup('env', 'HOME') }}"
+      delegate_to: 127.0.0.1
 
-#     - name: Print home var.
-#       debug: var=home
-#       delegate_to: 127.0.0.1
+    - name: Print home var.
+      debug: var=home
+      delegate_to: 127.0.0.1
 
-#     - name: Set home_pantheon_local_copies_dir var to "{{ home }}/pantheon-local-copies".
-#       ansible.builtin.set_fact:
-#         home_pantheon_local_copies_dir: "{{ home }}/pantheon-local-copies"
-#       delegate_to: 127.0.0.1
+    - name: Set home_pantheon_local_copies_dir var to "{{ home }}/pantheon-local-copies".
+      ansible.builtin.set_fact:
+        home_pantheon_local_copies_dir: "{{ home }}/pantheon-local-copies"
+      delegate_to: 127.0.0.1
 
-#   tasks:
-#     - name: Ensure {{ home_pantheon_local_copies_dir }}/source/{{ site_name }}-source.tar.gz file exists (on local host).
-#       ansible.builtin.stat:
-#         path: "{{ home_pantheon_local_copies_dir }}/source/{{ site_name }}-source.tar.gz"
-#       register: files_tgz
-#       delegate_to: 127.0.0.1
+  tasks:
+    - name: Ensure {{ home_pantheon_local_copies_dir }}/source/{{ site_name }}-source.tar.gz file exists (on local host).
+      ansible.builtin.stat:
+        path: "{{ home_pantheon_local_copies_dir }}/source/{{ site_name }}-source.tar.gz"
+      register: files_tgz
+      delegate_to: 127.0.0.1
 
-#     - name: Fail if {{ home_pantheon_local_copies_dir }}/source/{{ site_name }}-source.tar.gz file does not exist (on local host).
-#       ansible.builtin.fail:
-#         msg: File {{ home_pantheon_local_copies_dir }}/source/{{ site_name }}-source.tar.gz file does not exist, run 'make export'
-#       when: not files_tgz.stat.exists
-#       delegate_to: 127.0.0.1
+    - name: Fail if {{ home_pantheon_local_copies_dir }}/source/{{ site_name }}-source.tar.gz file does not exist (on local host).
+      ansible.builtin.fail:
+        msg: File {{ home_pantheon_local_copies_dir }}/source/{{ site_name }}-source.tar.gz file does not exist, run 'make export'
+      when: not files_tgz.stat.exists
+      delegate_to: 127.0.0.1
 
-#     - name: Ensure {{ site_remote_pantheon_local_copies_dir }}/source directory exists.
-#       shell: |
-#         mkdir -p {{ site_remote_pantheon_local_copies_dir }}/source
+    - name: Ensure {{ site_remote_pantheon_local_copies_dir }}/source directory exists.
+      shell: |
+        mkdir -p {{ site_remote_pantheon_local_copies_dir }}/source
 
-#     - name: Copy {{ home_pantheon_local_copies_dir }}/source/{{ site_name }}-source.tar.gz (on local host) to {{ site_remote_pantheon_local_copies_dir }}/source/{{ site_name }}-source.tar.gz (on remote host).
-#       copy:
-#         src: "{{ home_pantheon_local_copies_dir }}/source/{{ site_name }}-source.tar.gz"
-#         dest: "{{ site_remote_pantheon_local_copies_dir }}/source/{{ site_name }}-source.tar.gz"
-
-
-# - name: Unarchive Drupal Source.
-#   hosts: drupal
-#   gather_facts: false
-
-#   vars_files:
-#     - vars/drupal.yml
-
-#   pre_tasks:
-#     - name: Ping to validate the initial connection.
-#       ansible.builtin.ping:
-#         data: pong
-
-#   tasks:
-#     - name: Ensure {{ site_remote_pantheon_local_copies_dir }}/source/{{ site_name }}-source directory exists (on remote host).
-#       ansible.builtin.command: |
-#         mkdir -p {{ site_remote_pantheon_local_copies_dir }}/source/{{ site_name }}-source
-
-#     - name: Extract {{ site_remote_pantheon_local_copies_dir }}/source/{{ site_name }}-source.tar.gz to {{ site_remote_pantheon_local_copies_dir }}/source/{{ site_name }}-source.
-#       ansible.builtin.command: |
-#         tar -xvzf "{{ site_remote_pantheon_local_copies_dir }}/source/{{ site_name }}-source.tar.gz" -C "{{ site_remote_pantheon_local_copies_dir }}/source/{{ site_name }}-source"
-#       args:
-#         creates: "{{ site_remote_pantheon_local_copies_dir }}/source/{{ site_name }}-source/{{ site_name }}"
+    - name: Copy {{ home_pantheon_local_copies_dir }}/source/{{ site_name }}-source.tar.gz (on local host) to {{ site_remote_pantheon_local_copies_dir }}/source/{{ site_name }}-source.tar.gz (on remote host).
+      copy:
+        src: "{{ home_pantheon_local_copies_dir }}/source/{{ site_name }}-source.tar.gz"
+        dest: "{{ site_remote_pantheon_local_copies_dir }}/source/{{ site_name }}-source.tar.gz"
 
 
-- name: Import Drupal Source Database.
+- name: Unarchive Drupal Source.
   hosts: drupal
   gather_facts: false
 
@@ -85,16 +61,41 @@
         data: pong
 
   tasks:
-    - name: Remove /var/www/drupal/{{ site_drupal_version }}.
-      ansible.builtin.shell: |
-        rm -rf /var/www/drupal/{{ site_drupal_version }}
+    - name: Ensure {{ site_remote_pantheon_local_copies_dir }}/source/{{ site_name }}-source directory exists (on remote host).
+      ansible.builtin.command: |
+        mkdir -p {{ site_remote_pantheon_local_copies_dir }}/source/{{ site_name }}-source
 
-    - name: Import {{ site_remote_pantheon_local_copies_dir }}/source/{{ site_name }}-source/{{ site_name }} into /var/www/drupal/{{ site_drupal_version }}.
-      ansible.builtin.shell: |
-        cp -r {{ site_remote_pantheon_local_copies_dir }}/source/{{ site_name }}-source/{{ site_name }} /var/www/drupal/{{ site_drupal_version }}
+    - name: Extract {{ site_remote_pantheon_local_copies_dir }}/source/{{ site_name }}-source.tar.gz to {{ site_remote_pantheon_local_copies_dir }}/source/{{ site_name }}-source.
+      ansible.builtin.command: |
+        tar -xvzf "{{ site_remote_pantheon_local_copies_dir }}/source/{{ site_name }}-source.tar.gz" -C "{{ site_remote_pantheon_local_copies_dir }}/source/{{ site_name }}-source"
+      args:
+        creates: "{{ site_remote_pantheon_local_copies_dir }}/source/{{ site_name }}-source/{{ site_name }}"
 
-    - name: Ensure /var/www/drupal/{{ site_drupal_version }} directory has correct permissions.
+
+- name: Import Drupal Source.
+  hosts: drupal
+  become: true
+  gather_facts: false
+
+  vars_files:
+    - vars/drupal.yml
+
+  pre_tasks:
+    - name: Ping to validate the initial connection.
+      ansible.builtin.ping:
+        data: pong
+
+  tasks:
+    - name: Remove {{ site_install }}.
+      ansible.builtin.shell: |
+        rm -rf {{ site_install }}
+
+    - name: Import {{ site_remote_pantheon_local_copies_dir }}/source/{{ site_name }}-source/{{ site_name }} into {{ site_install }}.
+      ansible.builtin.shell: |
+        cp -r {{ site_remote_pantheon_local_copies_dir }}/source/{{ site_name }}-source/{{ site_name }} {{ site_install }}
+
+    - name: Ensure {{ site_install }} directory has correct permissions.
       become: true
       ansible.builtin.shell: |
-        chmod '0755' /var/www/drupal/{{ site_drupal_version }}
-        chown -R www-data:www-data /var/www/drupal/{{ site_drupal_version }}
+        chmod '0755' {{ site_install }}
+        chown -R www-data:www-data {{ site_install }}

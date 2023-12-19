@@ -24,13 +24,13 @@ i1: import-db
 import-db:
 	ansible-playbook drupal/drupal-import-db.yml
 
-i2: import-files
-import-files:
-	ansible-playbook drupal/drupal-import-files.yml
-
-i3: import-source
+i2: import-source
 import-source:
 	ansible-playbook drupal/drupal-import-source.yml
+
+i3: import-files
+import-files:
+	ansible-playbook drupal/drupal-import-files.yml
 
 ### Maintenance
 
