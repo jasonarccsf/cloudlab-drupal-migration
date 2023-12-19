@@ -28,6 +28,10 @@ i2: d7-import-files
 d7-import-files:
 	ansible-playbook drupal/drupal7-import-files.yml
 
+i3: d7-import-site
+d7-import-site:
+	ansible-playbook drupal/drupal7-import-site.yml
+
 ### Maintenance
 
 ping:

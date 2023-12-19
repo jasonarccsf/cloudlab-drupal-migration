@@ -1,0 +1,105 @@
+---
+- name: Copy Drupal 7 Site from Local Host (macOS Laptop) to Remote Host (EC2 Instance).
+  hosts: drupal7
+  gather_facts: false
+
+  vars_files:
+    - vars/drupal7.yml
+
+  vars:
+    site_name: "dpa"
+    site_remote_pantheon_local_copies_dir: "/tmp/pantheon-local-copies"
+
+  pre_tasks:
+    - name: Ping to validate the initial connection.
+      ansible.builtin.ping:
+        data: pong
+
+    - name: Set home var to "{{ lookup('env', 'HOME') }}".
+      ansible.builtin.set_fact:
+        home: "{{ lookup('env', 'HOME') }}"
+      delegate_to: 127.0.0.1
+
+    - name: Print home var.
+      debug: var=home
+      delegate_to: 127.0.0.1
+
+    - name: Set home_pantheon_local_copies_dir var to "{{ home }}/pantheon-local-copies".
+      ansible.builtin.set_fact:
+        home_pantheon_local_copies_dir: "{{ home }}/pantheon-local-copies"
+      delegate_to: 127.0.0.1
+
+  # tasks:
+  #   - name: Ensure {{ home_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tgz file exists (on local host).
+  #     ansible.builtin.stat:
+  #       path: "{{ home_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tgz"
+  #     register: files_tgz
+  #     delegate_to: 127.0.0.1
+
+#     - name: Fail if {{ home_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tgz file does not exist (on local host).
+#       ansible.builtin.fail:
+#         msg: File {{ home_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tgz file does not exist, run 'terminus local:getLiveFiles --no-interaction --overwrite -- "{{ site_name }}"'
+#       when: not files_tgz.stat.exists
+#       delegate_to: 127.0.0.1
+
+#     - name: Copy {{ home_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tgz (on local host) to {{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tgz (on remote host).
+#       copy:
+#         src: "{{ home_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tgz"
+#         dest: "{{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tgz"
+
+
+# - name: Unarchive Drupal 7 Site.
+#   hosts: drupal7
+#   gather_facts: false
+
+#   vars_files:
+#     - vars/drupal7.yml
+
+#   vars:
+#     site_name: "dpa"
+#     site_remote_pantheon_local_copies_dir: "/tmp/pantheon-local-copies"
+
+#   pre_tasks:
+#     - name: Ping to validate the initial connection.
+#       ansible.builtin.ping:
+#         data: pong
+
+#   tasks:
+#     - name: Ensure {{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files directory exists (on local host).
+#       ansible.builtin.command: |
+#         mkdir -p {{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files
+
+#     - name: Extract {{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tgz into {{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tar.
+#       ansible.builtin.command: |
+#         gzip --decompress "{{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tgz" --force --keep
+#       args:
+#         creates: "{{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tar"
+
+#     - name: Extract {{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tar to {{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files.
+#       ansible.builtin.command: |
+#         tar -xvf "{{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tar" -C "{{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files"
+#       args:
+#         creates: "{{ site_remote_pantheon_local_copies_dir }}/files/{{ site_name }}-files/files_live"
+
+
+# - name: Import Drupal 7 Site.
+#   hosts: drupal7
+#   gather_facts: false
+
+#   vars_files:
+#     - vars/drupal7.yml
+
+#   vars:
+#     site_name: "dpa"
+#     site_remote_pantheon_local_copies_dir: "/tmp/pantheon-local-copies"
+
+#   pre_tasks:
+#     - name: Ping to validate the initial connection.
+#       ansible.builtin.ping:
+#         data: pong
+
+#   tasks:
+#     - name: Import {{ site_remote_pantheon_local_copies_dir }}/db/{{ site_name }}-db.sql into database.
+#       ansible.builtin.shell: |
+#         mysql -u {{ db_user }} -p'{{ db_pass }}' -h {{ db_host }} -P {{ db_port }} \
+#           {{ db_name }} < "{{ site_remote_pantheon_local_copies_dir }}/db/{{ site_name }}-db.sql"
