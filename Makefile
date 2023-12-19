@@ -31,10 +31,15 @@ import-files:
 ### Maintenance
 
 ping:
-	ansible drupal --module-name ansible.builtin.ping --args="data=pong"
+	ansible drupal --module-name ansible.builtin.ping --args="data=pong" -vv
 
 reboot:
 	ansible drupal --module-name ansible.builtin.reboot --args="reboot_timeout=300"
+
+## Debug
+
+list:
+	ansible-inventory --inventory inventory.aws_ec2.yml --list -vv
 
 ## Pantheon Scripts
 

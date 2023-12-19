@@ -1,6 +1,6 @@
 ---
-- name: Copy Drupal Database from Local Host to Remote Host.
-  hosts: drupal
+- name: Export Pantheon Site.
+  hosts: 127.0.0.1
   gather_facts: false
 
   vars_files:
@@ -14,41 +14,34 @@
     - name: Set home var to "{{ lookup('env', 'HOME') }}".
       ansible.builtin.set_fact:
         home: "{{ lookup('env', 'HOME') }}"
-      delegate_to: 127.0.0.1
 
     - name: Print home var.
       debug: var=home
-      delegate_to: 127.0.0.1
 
     - name: Set home_pantheon_local_copies_dir var to "{{ home }}/pantheon-local-copies".
       ansible.builtin.set_fact:
         home_pantheon_local_copies_dir: "{{ home }}/pantheon-local-copies"
-      delegate_to: 127.0.0.1
 
   tasks:
     - name: Verify terminus is installed.
       command: terminus --version
-      delegate_to: 127.0.0.1
       changed_when: false
 
     # See: https://docs.pantheon.io/terminus/commands/local-getLiveDB
     - name: Export the database to {{ home_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz.
       shell: "terminus local:getLiveDB --no-interaction --overwrite -- {{ site_name }}"
-      delegate_to: 127.0.0.1
 
     # See: https://docs.pantheon.io/terminus/commands/local-getLiveFiles
     - name: Export the files to {{ home_pantheon_local_copies_dir }}/files/{{ site_name }}-files.tgz.
       shell: "terminus local:getLiveFiles --no-interaction --overwrite -- {{ site_name }}"
-      delegate_to: 127.0.0.1
 
     # See: https://docs.pantheon.io/terminus/commands/local-clone
     - name: Export the site to {{ home_pantheon_local_copies_dir }}/{{ site_name }}.
       shell: "terminus local:clone --no-interaction --override -- {{ site_name }}"
-      delegate_to: 127.0.0.1
 
-    - name: Create a gzip archive of the site source.
-      archive:
-        path:
-          - "{{ home_pantheon_local_copies_dir }}/{{ site_name }}/"
-        dest: "{{ home_pantheon_local_copies_dir }}/{{ site_name }}.gz"
-        format: gz
+    - name: Create a tar.gz archive of the site source.
+      shell: |
+        cd {{ home_pantheon_local_copies_dir }} &&
+          tar -cvzf {{ site_name }}.tar.gz {{ site_name }}/*
+      args:
+        creates: "{{ home_pantheon_local_copies_dir }}/dpa.tar.gz"

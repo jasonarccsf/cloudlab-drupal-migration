@@ -5,6 +5,8 @@
 # Site
 #
 
+site_name: "dpa"
+site_drupal_version: "7.99"
 site_remote_pantheon_local_copies_dir: "/tmp/pantheon-local-copies"
 
 #

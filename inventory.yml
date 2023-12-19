@@ -12,6 +12,3 @@ all:
     drupal:
       hosts:
         dpa-7.99.ec2:
-          # Site
-          site_name: "dpa"
-          site_drupal_version: "7.99"

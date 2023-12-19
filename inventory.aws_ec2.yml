@@ -2,13 +2,13 @@
 # See: https://docs.ansible.com/ansible/latest/collections/amazon/aws/aws_ec2_inventory.html
 # See: https://devopscube.com/setup-ansible-aws-dynamic-inventory/
 
-plugin: aws_ec2
-
+plugin: amazon.aws.aws_ec2
+# Login: aws-sso-util login --all
+profile: "TIS-SANDBOX.AWSAdministratorAccess"
 regions:
   - us-east-1
+  - us-west-1
 
 keyed_groups:
-  - prefix: tag
-    key: tags
   - prefix: aws_region
     key: placement.region
