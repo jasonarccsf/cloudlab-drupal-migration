@@ -15,5 +15,5 @@ resource "aws_instance" "sfdbi_7_99_ec2" {
 }
 
 output "sfdbi_7_99_ec2_public_ip_address" {
-  value = aws_instance.sfdbi_7_99_ec2.public_ip_address
+  value = aws_instance.sfdbi_7_99_ec2.public_ip
 }

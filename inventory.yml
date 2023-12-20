@@ -3,7 +3,7 @@ all:
   hosts:
     sfdbi-7.99.ec2:
       # Ansible
-      ansible_host: 34.207.234.237
+      ansible_host: 54.226.49.191
       ansible_user: ubuntu
       ansible_port: 22
       ansible_ssh_private_key_file: ~/.ssh/id_rsa.drupal

@@ -41,6 +41,9 @@ import-files:
 ping:
 	ansible drupal --module-name ansible.builtin.ping --args="data=pong" -vv
 
+ec2-ping:
+	ansible all --inventory inventory.aws_ec2.yml --module-name ansible.builtin.ping --args="data=pong" -vv
+
 reboot:
 	ansible drupal --module-name ansible.builtin.reboot --args="reboot_timeout=300"
 
