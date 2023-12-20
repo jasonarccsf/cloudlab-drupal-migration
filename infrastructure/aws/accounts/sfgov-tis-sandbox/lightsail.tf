@@ -1,6 +1,6 @@
 data "aws_availability_zones" "available" {}
 
-resource "aws_lightsail_instance" "sfdbi_7_99" {
+resource "aws_lightsail_instance" "sfdbi_7_99_lightsail" {
   name              = "sfdbi-7.99.ec2"
   availability_zone = data.aws_availability_zones.available.names[0]
   blueprint_id      = "ubuntu_22_04"
@@ -12,9 +12,10 @@ resource "aws_lightsail_instance" "sfdbi_7_99" {
     Name                = "SFDBI-7.99"
     Site_Name           = "SFDBI"
     Site_Drupal_Version = "7.99"
+    Instance            = "Lightsail"
   }
 }
 
-output "sfdbi_7_99_public_ip_address" {
-  value = aws_lightsail_instance.sfdbi_7_99.public_ip_address
+output "sfdbi_7_99_lightsail_public_ip_address" {
+  value = aws_lightsail_instance.sfdbi_7_99_lightsail.public_ip_address
 }
