@@ -3,7 +3,7 @@
 set -e
 set -u
 
-SITE="${SITE:-dpa}"
+SITE="${SITE:-sfdbi}"
 
 terminus --version
 

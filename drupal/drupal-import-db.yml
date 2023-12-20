@@ -1,5 +1,5 @@
 ---
-- name: Copy Drupal SQL Database from Local Host (macOS Laptop) to Remote Host (EC2 Instance).
+- name: Copy Drupal DB from Local Host (macOS Laptop) to Remote Host (EC2 Instance).
   hosts: drupal
   gather_facts: false
 
@@ -48,7 +48,7 @@
         dest: "{{ site_remote_pantheon_local_copies_dir }}/db/{{ site_name }}-db.tgz"
 
 
-- name: Unarchive Drupal SQL Database.
+- name: Unarchive Drupal DB.
   hosts: drupal
   gather_facts: false
 
@@ -74,7 +74,7 @@
         creates: "{{ site_remote_pantheon_local_copies_dir }}/db/{{ site_name }}-db.sql"
 
 
-- name: Import Drupal SQL Database.
+- name: Import Drupal DB.
   hosts: drupal
   gather_facts: false
 

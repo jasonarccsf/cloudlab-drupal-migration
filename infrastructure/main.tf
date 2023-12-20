@@ -4,6 +4,6 @@ module "aws" {
   source = "./aws/accounts/sfgov-tis-sandbox"
 }
 
-output "dpa_7_99_public_ip_address" {
-  value = module.aws.dpa_7_99_public_ip_address
+output "sfdbi_7_99_public_ip_address" {
+  value = module.aws.sfdbi_7_99_public_ip_address
 }
