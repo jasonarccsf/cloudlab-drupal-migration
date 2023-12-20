@@ -1,6 +1,6 @@
 ---
 - name: Install Drupal CMS.
-  hosts: drupal
+  hosts: all
   become: true
 
   vars_files:

@@ -31,4 +31,8 @@
     - name: Print ansible_ec2_instance_tags_keys var.
       debug: var=ansible_ec2_instance_tags_keys
 
+    - name: Print hostvars[inventory_hostname].
+      debug:
+        msg: "{{ hostvars[inventory_hostname] }}"
+
   ## END DEBUG - Pre Tasks

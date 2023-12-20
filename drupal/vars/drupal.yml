@@ -12,12 +12,8 @@ home_pantheon_local_copies_dir: "{{ home }}/pantheon-local-copies"
 # Site (Remote)
 #
 
-# TODO: Eventually, these values will be referenced from AWS Tags information, as defined in the Terraform.
-site_name: "{{ aws_tag_site_name | lower }}"
-site_drupal_version: "{{ aws_tag_site_drupal_version | lower | replace('_', '.') }}"
-
-# site_name: "{{ hostvars[inventory_hostname].tags.Site_Name|lower }}"
-# site_drupal_version: "{{ hostvars[inventory_hostname].tags.Site_Drupal_Version }}"
+site_name: "{{ hostvars[inventory_hostname].tags.Site_Name | lower }}"
+site_drupal_version: "{{ hostvars[inventory_hostname].tags.Site_Drupal_Version }}"
 
 site_install: "/var/www/drupal/{{ site_drupal_version }}"
 site_install_files: "{{ site_install }}/sites/default/files"

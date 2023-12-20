@@ -39,24 +39,18 @@ import-files:
 ### Maintenance
 
 ping:
-	ansible drupal --module-name ansible.builtin.ping --args="data=pong" -vv
-
-ec2-ping:
-	ansible all --inventory inventory.aws_ec2.yml --module-name ansible.builtin.ping --args="data=pong" -vv
+	ansible all --module-name ansible.builtin.ping --args="data=pong" -vv
 
 reboot:
-	ansible drupal --module-name ansible.builtin.reboot --args="reboot_timeout=300"
+	ansible all --module-name ansible.builtin.reboot --args="reboot_timeout=300"
 
 ## Debug
 
 debug-vars:
 	ansible-playbook drupal/debug-vars.yml
 
-ec2-debug-vars:
-	ansible-playbook --inventory inventory.aws_ec2.yml drupal/debug-vars.yml
-
-ec2-inventory:
-	ansible-inventory --inventory inventory.aws_ec2.yml --graph
+inventory:
+	ansible-inventory --graph
 
 ## Pantheon Scripts
 

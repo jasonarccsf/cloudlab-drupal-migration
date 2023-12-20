@@ -10,31 +10,15 @@ profile: "TIS-SANDBOX.AWSAdministratorAccess"
 regions:
   - us-east-1
 
+filters:
+  # Filter and only show instances with their state as `running`.
+  instance-state-name: running
+
 # Graph Example Output:
 #
 # Run:
 #
 # ansible-inventory --inventory inventory.aws_ec2.yml --graph
-#
-# Output:
-#
-# @all:
-#   |--@ungrouped:
-#   |--@aws_ec2:
-#   |  |--ec2-34-207-210-217.compute-1.amazonaws.com
-#   |--@aws_tag_Name_SFDBI_7_99:
-#   |  |--ec2-34-207-210-217.compute-1.amazonaws.com
-#   |--@aws_tag_Site_Drupal_Version_7_99:
-#   |  |--ec2-34-207-210-217.compute-1.amazonaws.com
-#   |--@aws_tag_Site_Name_SFDBI:
-#   |  |--ec2-34-207-210-217.compute-1.amazonaws.com
-
-
-# Graph Example Output:
-#
-# Run:
-#
-# ansible-inventory --inventory inventory.aws_ec2.yml --list -v
 #
 # Output:
 #

@@ -1,6 +1,6 @@
 ---
 - name: Setup Drupal Dependencies.
-  hosts: drupal
+  hosts: all
   become: true
 
   vars_files:

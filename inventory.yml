@@ -1,17 +1,14 @@
 ---
 all:
   hosts:
-    sfdbi-7.99.ec2:
+    sfdbi-7.99.lightsail:
       # Ansible
       ansible_host: 54.226.49.191
       ansible_user: ubuntu
       ansible_port: 22
       ansible_ssh_private_key_file: ~/.ssh/id_rsa.drupal
-      # TODO: Eventually, these values will be referenced from AWS Tags information, as defined in the Terraform.
-      aws_tag_site_name: "sfdbi"
-      aws_tag_site_drupal_version: "7.99"
 
   children:
     drupal:
       hosts:
-        sfdbi-7.99.ec2:
+        sfdbi-7.99.lightsail:

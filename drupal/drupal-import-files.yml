@@ -1,6 +1,6 @@
 ---
 - name: Copy Drupal Files from Local Host (macOS Laptop) to Remote Host (EC2 Instance).
-  hosts: drupal
+  hosts: all
   gather_facts: false
 
   vars_files:
@@ -49,7 +49,7 @@
 
 
 - name: Unarchive Drupal Files.
-  hosts: drupal
+  hosts: all
   gather_facts: false
 
   vars_files:
@@ -79,7 +79,7 @@
 
 
 - name: Import Drupal Files.
-  hosts: drupal
+  hosts: all
   become: true
   gather_facts: false
 
