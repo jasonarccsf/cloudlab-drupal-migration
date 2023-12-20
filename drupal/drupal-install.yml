@@ -1,0 +1,20 @@
+---
+- name: Install Drupal CMS.
+  hosts: drupal
+  become: true
+
+  vars_files:
+    - vars/drupal.yml
+
+  pre_tasks:
+    - name: Ping to validate the initial connection.
+      ansible.builtin.ping:
+        data: pong
+
+    - name: Update apt cache.
+      ansible.builtin.apt: update_cache=true cache_valid_time=600
+      changed_when: false
+      when: ansible_os_family == 'Debian'
+
+  roles:
+    - role: geerlingguy.drupal

@@ -22,7 +22,7 @@
     - role: geerlingguy.php-versions
     - role: geerlingguy.php
     - role: geerlingguy.php-mysql
-    - role: geerlingguy.phpmyadmin
+    # - role: geerlingguy.phpmyadmin
     - role: geerlingguy.composer
     - role: geerlingguy.drush
 
@@ -43,32 +43,11 @@
       ansible.builtin.shell: php -v | grep -F '{{ php_version }}'
       changed_when: false
 
-    - name: Ensure phpMyAdmin is running.
-      uri:
-        url: "http://127.0.0.1/phpmyadmin/"
-        status_code: 200
-      register: result
-      until: result.status == 200
-      retries: 60
-      delay: 1
-
-
-- name: Install Drupal CMS.
-  hosts: drupal
-  become: true
-
-  vars_files:
-    - vars/drupal.yml
-
-  pre_tasks:
-    - name: Ping to validate the initial connection.
-      ansible.builtin.ping:
-        data: pong
-
-    - name: Update apt cache.
-      ansible.builtin.apt: update_cache=true cache_valid_time=600
-      changed_when: false
-      when: ansible_os_family == 'Debian'
-
-  roles:
-    - role: geerlingguy.drupal
+    # - name: Ensure phpMyAdmin is running.
+    #   uri:
+    #     url: "http://127.0.0.1/phpmyadmin/"
+    #     status_code: 200
+    #   register: result
+    #   until: result.status == 200
+    #   retries: 60
+    #   delay: 1

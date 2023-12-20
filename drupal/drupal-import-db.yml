@@ -87,11 +87,6 @@
         data: pong
 
   tasks:
-    - name: Drop {{ db_name }} database if it exists.
-      shell: |
-       mysql -u {{ db_user }} -p'{{ db_pass }}' -h {{ db_host }} -P {{ db_port }} \
-        -e "DROP DATABASE IF EXISTS {{ db_name }};"
-
     - name: Import {{ site_remote_pantheon_local_copies_dir }}/db/{{ site_name }}-db.sql into database.
       ansible.builtin.shell: |
         mysql -u {{ db_user }} -p'{{ db_pass }}' -h {{ db_host }} -P {{ db_port }} \

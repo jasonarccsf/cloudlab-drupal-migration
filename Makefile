@@ -13,26 +13,28 @@ deps:
 
 ### Provisioning
 
-.PHONY: drupal
-drupal:
-	ansible-playbook drupal/drupal.yml
+setup:
+	ansible-playbook drupal/drupal-setup.yml
+
+install:
+	ansible-playbook drupal/drupal-install.yml
 
 export:
 	ansible-playbook drupal/drupal-export-pantheon-site.yml
 
 import: i1 i2 i3
 
-i1: import-source
+i1: import-db
+import-db:
+	ansible-playbook drupal/drupal-import-db.yml
+
+i2: import-source
 import-source:
 	ansible-playbook drupal/drupal-import-source.yml
 
-i2: import-files
+i3: import-files
 import-files:
 	ansible-playbook drupal/drupal-import-files.yml
-
-i3: import-db
-import-db:
-	ansible-playbook drupal/drupal-import-db.yml
 
 ### Maintenance
 
