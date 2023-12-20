@@ -20,6 +20,8 @@ drupal:
 export:
 	ansible-playbook drupal/drupal-export-pantheon-site.yml
 
+import: i1 i2 i3
+
 i1: import-source
 import-source:
 	ansible-playbook drupal/drupal-import-source.yml

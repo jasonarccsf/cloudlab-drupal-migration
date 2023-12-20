@@ -1,7 +1,7 @@
 ---
 all:
   hosts:
-    sfbdi-7.99.ec2:
+    sfdbi-7.99.ec2:
       # Ansible
       ansible_host: '34.207.234.237'
       ansible_user: ubuntu
@@ -11,4 +11,4 @@ all:
   children:
     drupal:
       hosts:
-        sfbdi-7.99.ec2:
+        sfdbi-7.99.ec2:
