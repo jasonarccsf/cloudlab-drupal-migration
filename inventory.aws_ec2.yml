@@ -2,13 +2,55 @@
 # See: https://docs.ansible.com/ansible/latest/collections/amazon/aws/aws_ec2_inventory.html
 # See: https://devopscube.com/setup-ansible-aws-dynamic-inventory/
 
+# Login:
+# aws-sso-util login https://hmm.awsapps.com/start/
+
 plugin: amazon.aws.aws_ec2
-# Login: aws-sso-util login --all
 profile: "TIS-SANDBOX.AWSAdministratorAccess"
 regions:
   - us-east-1
-  - us-west-1
+
+# Graph Example Output:
+#
+# Run:
+#
+# ansible-inventory --inventory inventory.aws_ec2.yml --graph
+#
+# Output:
+#
+# @all:
+#   |--@ungrouped:
+#   |--@aws_ec2:
+#   |  |--ec2-34-207-210-217.compute-1.amazonaws.com
+#   |--@aws_tag_Name_SFDBI_7_99:
+#   |  |--ec2-34-207-210-217.compute-1.amazonaws.com
+#   |--@aws_tag_Site_Drupal_Version_7_99:
+#   |  |--ec2-34-207-210-217.compute-1.amazonaws.com
+#   |--@aws_tag_Site_Name_SFDBI:
+#   |  |--ec2-34-207-210-217.compute-1.amazonaws.com
+
+
+# Graph Example Output:
+#
+# Run:
+#
+# ansible-inventory --inventory inventory.aws_ec2.yml --list -v
+#
+# Output:
+#
+# @all:
+#   |--@ungrouped:
+#   |--@aws_ec2:
+#   |  |--ec2-34-207-210-217.compute-1.amazonaws.com
+#   |--@aws_tag_Name_SFDBI_7_99:
+#   |  |--ec2-34-207-210-217.compute-1.amazonaws.com
+#   |--@aws_tag_Site_Drupal_Version_7_99:
+#   |  |--ec2-34-207-210-217.compute-1.amazonaws.com
+#   |--@aws_tag_Site_Name_SFDBI:
+#   |  |--ec2-34-207-210-217.compute-1.amazonaws.com
 
 keyed_groups:
-  - prefix: aws_region
-    key: placement.region
+  - prefix: aws_tag
+    key: tags
+  # - prefix: aws_region
+  #   key: placement.region

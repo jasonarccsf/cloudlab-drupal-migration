@@ -2,13 +2,21 @@
 # See: https://www.rosehosting.com/blog/how-to-install-drupal-on-ubuntu-22-04/
 
 #
-# Site
+# Home (Local)
 #
 
-site_name: "sfdbi"
-site_drupal_version: "7.99"
+home: "{{ lookup('env', 'HOME') }}"
+home_pantheon_local_copies_dir: "{{ home }}/pantheon-local-copies"
 
-site_install: "/var/www/drupal/7.99"
+#
+# Site (Remote)
+#
+
+# TODO: Eventually, these values will be referenced from AWS Tags information, as defined in the Terraform.
+site_name: "{{ aws_tag_site_name | lower }}"
+site_drupal_version: "{{ aws_tag_site_drupal_version | lower | replace('_', '.') }}"
+
+site_install: "/var/www/drupal/{{ site_drupal_version }}"
 site_install_files: "{{ site_install }}/sites/default/files"
 
 site_remote_pantheon_local_copies_dir: "/tmp/pantheon-local-copies"

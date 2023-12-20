@@ -1,0 +1,34 @@
+---
+- name: Debug.
+  hosts: all
+  gather_facts: false
+
+  ## DEBUG - Pre Tasks
+
+  vars_files:
+    - vars/drupal.yml
+
+  pre_tasks:
+    - name: Ping to validate the initial connection.
+      ansible.builtin.ping:
+        data: pong
+
+    - name: Print home var.
+      debug: var=home
+
+    - name: Print home_pantheon_local_copies_dir var.
+      debug: var=home_pantheon_local_copies_dir
+
+    - name: Print site_name var.
+      debug: var=site_name
+
+    - name: Print site_drupal_version var.
+      debug: var=site_drupal_version
+
+    # Gather EC2 metadata facts
+    - amazon.aws.ec2_metadata_facts:
+
+    - name: Print ansible_ec2_instance_tags_keys var.
+      debug: var=ansible_ec2_instance_tags_keys
+
+  ## END DEBUG - Pre Tasks

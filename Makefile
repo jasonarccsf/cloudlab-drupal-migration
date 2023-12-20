@@ -46,8 +46,14 @@ reboot:
 
 ## Debug
 
-list:
-	ansible-inventory --inventory inventory.aws_ec2.yml --list -vv
+debug-vars:
+	ansible-playbook drupal/debug-vars.yml
+
+ec2-debug-vars:
+	ansible-playbook --inventory inventory.aws_ec2.yml drupal/debug-vars.yml
+
+ec2-inventory:
+	ansible-inventory --inventory inventory.aws_ec2.yml --graph
 
 ## Pantheon Scripts
 
